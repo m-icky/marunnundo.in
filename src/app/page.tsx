@@ -126,6 +126,25 @@ export default function HomePage() {
 
   return (
     <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 gap-6">
+      {/* Search Engine Optimization JSON-LD Local Business & Site Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            'name': 'Marunnundo.in',
+            'alternateName': 'മരുന്നുണ്ടോ.in',
+            'url': 'https://marunnundo.in',
+            'description': 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക.',
+            'potentialAction': {
+              '@type': 'SearchAction',
+              'target': 'https://marunnundo.in/?q={search_term_string}',
+              'query-input': 'required name=search_term_string'
+            }
+          })
+        }}
+      />
       
       {/* 1. HERO & SEARCH HEAD-UP DISPLAY */}
       <section className="glass-card rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row justify-between items-center gap-6 border border-emerald-100 shadow-xl shadow-emerald-900/5 relative overflow-hidden">

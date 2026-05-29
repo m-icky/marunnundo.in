@@ -11,7 +11,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'മരുന്നുണ്ടോ.in — സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്താം',
+  metadataBase: new URL('https://marunnundo.in'),
+  title: {
+    default: 'മരുന്നുണ്ടോ.in — സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്താം',
+    template: '%s | Marunnundo.in',
+  },
   description: 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക. Check nearby medicine availability and driving routes in Kerala.',
   keywords: [
     'medical shop near me Kerala',
@@ -20,10 +24,55 @@ export const metadata: Metadata = {
     'medical shop Thrissur',
     'medicine search Kerala',
     'മരുന്നുണ്ടോ',
+    'marunnundo',
+    'marunnundo Kochi',
+    'online medicine availability Kerala',
+    'pharmacies in Kozhikode',
+    'pharmacies in Trivandrum',
   ],
   authors: [{ name: 'Marunnundo Team' }],
+  creator: 'Marunnundo Team',
+  publisher: 'Marunnundo',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'ml_IN',
+    alternateLocale: 'en_US',
+    url: 'https://marunnundo.in',
+    title: 'മരുന്നുണ്ടോ.in — സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്താം',
+    description: 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക. Check nearby medicine availability and driving routes in Kerala.',
+    siteName: 'Marunnundo.in',
+    images: [
+      {
+        url: 'https://cdn-icons-png.flaticon.com/512/2966/2966327.png',
+        width: 512,
+        height: 512,
+        alt: 'Marunnundo Logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'മരുന്നുണ്ടോ.in — സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്താം',
+    description: 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക.',
+    images: ['https://cdn-icons-png.flaticon.com/512/2966/2966327.png'],
+  },
   icons: {
     icon: 'https://cdn-icons-png.flaticon.com/512/2966/2966327.png',
+    apple: 'https://cdn-icons-png.flaticon.com/512/2966/2966327.png',
+  },
+  alternates: {
+    canonical: '/',
   },
 };
 

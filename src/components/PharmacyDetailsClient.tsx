@@ -204,8 +204,43 @@ export default function PharmacyDetailsClient({ pharmacy, session }: Props) {
     ? `https://wa.me/91${pharmacy.whatsappNumber}?text=Hi%20${encodeURIComponent(pharmacy.name)},%20I%20saw%20your%20shop%20on%20Marunnundo.in%20and%20wanted%20to%20check%20availability%20for:`
     : null;
 
+  // Generate Pharmacy structured data for Local SEO
+  const pharmacySchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Pharmacy',
+    '@id': `https://marunnundo.in/pharmacy/${pharmacy.id}`,
+    'name': pharmacy.name,
+    'image': pharmacy.logo || pharmacy.banner || 'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=150&auto=format&fit=crop&q=60',
+    'telephone': pharmacy.contactNumber,
+    'address': {
+      '@type': 'PostalAddress',
+      'streetAddress': pharmacy.address,
+      'addressLocality': pharmacy.address.split(',')[1]?.trim() || 'Kerala',
+      'addressRegion': 'KL',
+      'addressCountry': 'IN',
+    },
+    'geo': {
+      '@type': 'GeoCoordinates',
+      'latitude': pharmacy.latitude,
+      'longitude': pharmacy.longitude,
+    },
+    'url': `https://marunnundo.in/pharmacy/${pharmacy.id}`,
+    ...(pharmacy.rating > 0 && pharmacy.reviews.length > 0 ? {
+      'aggregateRating': {
+        '@type': 'AggregateRating',
+        'ratingValue': pharmacy.rating.toFixed(1),
+        'reviewCount': pharmacy.reviews.length.toString(),
+      }
+    } : {}),
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+      {/* Search Engine Optimization Local Business (Pharmacy) Structured Data Schema */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(pharmacySchema) }}
+      />
       {/* 1. BACK NAVIGATION */}
       <Link 
         href="/" 
