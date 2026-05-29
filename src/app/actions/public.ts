@@ -215,7 +215,7 @@ export async function submitReview(pharmacyId: string, rating: number, comment: 
     });
 
     const averageRating =
-      reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+      reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length;
 
     await db.pharmacy.update({
       where: { id: pharmacyId },

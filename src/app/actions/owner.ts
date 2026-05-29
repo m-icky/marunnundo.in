@@ -242,16 +242,16 @@ export async function getPharmacyAnalytics(pharmacyId: string) {
   });
 
   const totalMedicines = medicines.length;
-  const lowStock = medicines.filter(m => m.quantity <= 10).length;
-  const outOfStock = medicines.filter(m => m.quantity === 0).length;
-  const totalValue = medicines.reduce((sum, m) => sum + (m.price * m.quantity), 0);
+  const lowStock = medicines.filter((m: any) => m.quantity <= 10).length;
+  const outOfStock = medicines.filter((m: any) => m.quantity === 0).length;
+  const totalValue = medicines.reduce((sum: number, m: any) => sum + (m.price * m.quantity), 0);
 
   const reviews = await db.review.findMany({
     where: { pharmacyId },
   });
 
   const avgRating = reviews.length > 0
-    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length
+    ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length
     : 0;
 
   // Let's create simulated visitor stats based on the medicines and reviews for nice analytics charts
