@@ -176,7 +176,7 @@ export async function registerOwner(data: RegisterOwnerInput) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create Owner + Pharmacy + Operating Hours in transaction
-    const result = await db.$transaction(async (tx) => {
+    const result = await db.$transaction(async (tx: any) => {
       const user = await tx.user.create({
         data: {
           name,
