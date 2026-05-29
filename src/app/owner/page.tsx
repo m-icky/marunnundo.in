@@ -1,6 +1,5 @@
 import { getSession } from '@/app/actions/auth';
 import { getOwnerPharmacies, getPharmacyAnalytics } from '@/app/actions/owner';
-import { getPharmacyDetails } from '@/app/actions/public';
 import { redirect } from 'next/navigation';
 import OwnerDashboardClient from '@/components/OwnerDashboardClient';
 
@@ -17,7 +16,6 @@ export default async function OwnerDashboardPage() {
       <OwnerDashboardClient 
         sessionName={session.name}
         analytics={null}
-        recentReviews={[]}
         pharmacyId={null}
       />
     );
@@ -25,14 +23,11 @@ export default async function OwnerDashboardPage() {
 
   const pharmacy = pharmacies[0];
   const analytics = await getPharmacyAnalytics(pharmacy.id);
-  const fullDetails = await getPharmacyDetails(pharmacy.id);
-  const recentReviews = fullDetails?.reviews.slice(0, 3) || [];
 
   return (
     <OwnerDashboardClient 
       sessionName={session.name}
       analytics={analytics}
-      recentReviews={recentReviews}
       pharmacyId={pharmacy.id}
     />
   );

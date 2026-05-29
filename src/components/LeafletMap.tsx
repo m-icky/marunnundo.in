@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
+import { useLanguage } from '@/context/LanguageContext';
 
 // Fix Leaflet marker icon asset path errors
 const defaultIcon = L.icon({
@@ -121,6 +122,7 @@ export default function LeafletMap({
   centerLng = 76.2801,
   zoom = 13,
 }: MapProps) {
+  const { language } = useLanguage();
   const [pickerCoords, setPickerCoords] = useState<[number, number] | null>(null);
   const [routePolyline, setRoutePolyline] = useState<[number, number][]>([]);
   const [mapCenter, setMapCenter] = useState<[number, number]>([centerLat, centerLng]);
@@ -258,11 +260,23 @@ export default function LeafletMap({
           <>
             {/* User current location dot if active */}
             {userLat && userLng && (
-              <Marker position={[userLat, userLng]} icon={userLocationIcon}>
-                <Popup>
-                  <div className="font-semibold text-xs text-blue-600">നിങ്ങളുടെ സ്ഥാനം (You are here)</div>
-                </Popup>
-              </Marker>
+              <>
+                <Marker position={[userLat, userLng]} icon={userLocationIcon}>
+                  <Popup>
+                    <div className="font-semibold text-xs text-blue-600">{language === 'ml' ? 'നിങ്ങളുടെ സ്ഥാനം' : 'You are here'}</div>
+                  </Popup>
+                </Marker>
+                <Circle 
+                  center={[userLat, userLng]}
+                  radius={150}
+                  pathOptions={{
+                    color: '#3b82f6',
+                    fillColor: '#3b82f6',
+                    fillOpacity: 0.15,
+                    weight: 1,
+                  }}
+                />
+              </>
             )}
 
             {/* Pharmacy pins */}

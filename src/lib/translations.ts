@@ -12,11 +12,10 @@ export const translations = {
     pharmacy_discovery: "ഫാർമസി കണ്ടെത്തൽ",
 
     // Footer
-    footer_desc: "സമീപത്തെ മെഡിക്കൽ ショപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത എന്നിവ തൽസമയം കണ്ടെത്താനും കൃത്യമായി നാവിഗേറ്റ് ചെയ്യാനുമുള്ള കേരളത്തിലെ ആദ്യത്തെ സമ്പൂർണ്ണ പ്ലാറ്റ്‌ഫോം.",
+    footer_desc: "സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത എന്നിവ തൽസമയം കണ്ടെത്താനും കൃത്യമായി നാവിഗേറ്റ് ചെയ്യാനുമുള്ള കേരളത്തിലെ ആദ്യത്തെ സമ്പൂർണ്ണ പ്ലാറ്റ്‌ഫോം.",
     footer_desc_en: "Find nearby pharmacies, check live medicine availability, and get direct map routes across Kerala.",
     key_districts: "പ്രധാന നഗരങ്ങൾ",
     contact_support: "സഹായം",
-    dhs_approved: "DHS & ഡ്രഗ്സ് കൺട്രോൾ അംഗീകൃതം",
     designed_by: "രൂപകൽപ്പനയും നിർമ്മാണവും",
     privacy_policy: "സ്വകാര്യതാ നയം",
     terms_of_service: "സേവന വ്യവസ്ഥകൾ",
@@ -68,7 +67,7 @@ export const translations = {
 
     // Home Page - SEO Block
     seo_title: "മരുന്നുണ്ടോ.in - കേരളത്തിലെ ഫാർമസി & മെഡിസിൻ തിരച്ചിൽ ഡയറക്ടറി",
-    seo_desc: "നിങ്ങളുടെ പ്രദേശത്തെ മെഡിക്കൽ സ്റ്റോറുകളിൽ മരുന്നുകൾ ലഭ്യമാണോ എന്ന് തൽസമയം പരിശോധിക്കാൻ സഹായിക്കുന്ന ഒരു ഓൺലൈൻ പ്ലാറ്റ്‌ഫോമാണ് മരുന്നുണ്ടോ (Marunnundo). പലരും ഗൂഗിളിൽ marunnundo.in, marunn undo, marun indo, marun, അല്ലെങ്കിൽ marunundo എന്ന് ടൈപ്പ് ചെയ്തും ഞങ്ങളുടെ വെബ്സൈറ്റിൽ എത്താറുണ്ട്. കേരളത്തിലെ ഏത് ഭാഗത്തുമുള്ള ഫാർമസികൾ കണ്ടെത്താനും അവയുമായി ബന്ധപ്പെടാനും ഈ സംവിധാനം ഉപയോഗിക്കാം.",
+    seo_desc: "നിങ്ങളുടെ പ്രദേശത്തെ മെഡിക്കൽ സ്റ്റോറുകളിൽ മരുന്നുകൾ ലഭ്യമാണോ എന്ന് തൽസമയം പരിശോധിക്കാൻ സഹായിക്കുന്ന ഒരു ഓൺലൈൻ പ്ലാറ്റ്‌ഫോമാണ് മരുന്നുണ്ടോ (Marunnundo). കേരളത്തിലെ ഏത് ഭാഗത്തുമുള്ള ഫാർമസികൾ കണ്ടെത്താനും അവയുമായി ബന്ധപ്പെടാനും ഈ സംവിധാനം ഉപയോഗിക്കാം.",
     seo_queries: "പതിവായി തിരയുന്ന വാക്കുകൾ: Marunnundo app, marunn undo kochi, marun indo medicine search, marun shop near me, മരുന്നുണ്ടോ മെഡിക്കൽ ഷോപ്പുകൾ.",
 
     // Pharmacy Details Page
@@ -117,26 +116,26 @@ export const translations = {
     login_title: "മരുന്നുണ്ടോ ലോഗിൻ",
     login_subtitle: "നിങ്ങളുടെ ഫാർമസി പാനൽ ലോഗിൻ ചെയ്യുക",
     email_label: "ഇമെയിൽ വിലാസം",
-    password_label: "രഹസ്യവാക്ക്",
+    password_label: "പാസ്സ്‌വേർഡ്",
     login_btn: "ലോഗിൻ ചെയ്യുക",
     logging_in_btn: "ലോഗിൻ ചെയ്യുന്നു...",
     no_account_prompt: "അക്കൗണ്ട് ഇല്ലേ?",
     register_here: "ഇവിടെ രജിസ്റ്റർ ചെയ്യാം",
-    invalid_credentials: "തെറ്റായ ഇമെയിൽ അല്ലെങ്കിൽ രഹസ്യവാക്ക്",
+    invalid_credentials: "തെറ്റായ ഇമെയിൽ അല്ലെങ്കിൽ പാസ്സ്‌വേർഡ്",
 
     // Register Page
     register_title: "പുതിയ അക്കൗണ്ട് രജിസ്റ്റർ ചെയ്യാം",
     register_subtitle: "Marunnundo.in-ൽ പുതിയ അക്കൗണ്ട് തുറക്കൂ",
-    patient_tab: "രോഗി / ഉപയോക്താവ്",
+    patient_tab: "ഉപയോക്താവ്",
     owner_tab: "ഫാർമസി ഉടമ",
     personal_info_section: "വ്യക്തിഗത വിവരങ്ങൾ",
     name_label: "പേര്",
     email_reg_label: "ഇമെയിൽ",
     phone_label: "ഫോൺ നമ്പർ",
-    password_reg_label: "രഹസ്യവാക്ക്",
+    password_reg_label: "പാസ്സ്‌വേർഡ്",
     registering_btn: "രജിസ്റ്റർ ചെയ്യുന്നു...",
     register_btn: "രജിസ്റ്റർ ചെയ്യാം",
-    pharmacy_info_section: "മെഡിക്കൽ ショപ്പ് വിവരങ്ങൾ",
+    pharmacy_info_section: "മെഡിക്കൽ ഷോപ്പ് വിവരങ്ങൾ",
     shop_name_label: "ഷോപ്പിന്റെ പേര്",
     address_label: "വിലാസം",
     pincode_label: "പിൻകോഡ്",
@@ -161,12 +160,12 @@ export const translations = {
     login_here: "ഇവിടെ ലോഗിൻ ചെയ്യാം",
 
     // Merchant / Owner Panel Page
-    merchant_portal: "മർച്ചന്റ് പോർട്ടൽ",
+    pharmacy_portal: "ഫാർമസി പോർട്ടൽ",
     welcome_back: "സ്വാഗതം,",
     merchant_desc: "സ്റ്റോക്ക് വിവരങ്ങൾ, ഉപഭോക്തൃ റിവ്യൂകൾ, പേജ് സന്ദർശനം എന്നിവ ഇവിടെ നിയന്ത്രിക്കാം.",
     add_medicine_btn: "മരുന്നുകൾ ചേർക്കുക",
     no_pharmacy_registered: "ഫാർമസി രജിസ്റ്റർ ചെയ്തിട്ടില്ല",
-    no_pharmacy_desc: "നിങ്ങൾ ഒരു മർച്ചന്റ് അക്കൗണ്ടിലാണ് ലോഗിൻ ചെയ്തിരിക്കുന്നത്, എന്നാൽ നിങ്ങളുടെ അക്കൗണ്ടിൽ ഫാർമസികളൊന്നും കാണുന്നില്ല. ഫാർമസി രജിസ്റ്റർ ചെയ്യുകയോ സഹായത്തിനായി ബന്ധപ്പെടുകയോ ചെയ്യുക.",
+    no_pharmacy_desc: "നിങ്ങൾ ഒരു ഫാർമസി അക്കൗണ്ടിലാണ് ലോഗിൻ ചെയ്തിരിക്കുന്നത്, എന്നാൽ നിങ്ങളുടെ അക്കൗണ്ടിൽ ഫാർമസികളൊന്നും കാണുന്നില്ല. ഫാർമസി രജിസ്റ്റർ ചെയ്യുകയോ സഹായത്തിനായി ബന്ധപ്പെടുകയോ ചെയ്യുക.",
     register_store_btn: "സ്റ്റോർ രജിസ്റ്റർ ചെയ്യുക",
     metrics_sku: "മരുന്നുകളുടെ എണ്ണം",
     metrics_sku_desc: "രജിസ്റ്റർ ചെയ്ത മരുന്നുകൾ",
@@ -193,7 +192,7 @@ export const translations = {
     admin_active_pharmacies: "സജീവ ഫാർമസികൾ",
     admin_verified_active: "Verified Active Shops",
     admin_pending_approvals: "അംഗീകാരം കാക്കുന്നവ",
-    admin_awaiting_dhs: "Awaiting DHS Verifications",
+    admin_awaiting_verification: "സ്ഥിരീകരണം കാത്തിരിക്കുന്നു",
     admin_total_medicines: "ആകെ മരുന്നുകൾ",
     admin_registered_inventory: "Registered inventory items",
     admin_search_placeholder: "കടയുടെ പേര്, വിലാസം, ലൈസൻസ് നമ്പർ അല്ലെങ്കിൽ ഉടമയുടെ പേര് തിരയൂ...",
@@ -231,7 +230,7 @@ export const translations = {
     owner_nav_inventory: "മരുന്ന് സ്റ്റോക്ക്",
     owner_nav_reviews: "അഭിപ്രായങ്ങൾ",
     owner_live_preview: "ലൈവ് കാണാം",
-    owner_secure_portal: "സുരക്ഷിത മർച്ചന്റ് പോർട്ടൽ",
+    owner_secure_portal: "സുരക്ഷിത ഫാർമസി പോർട്ടൽ",
   },
   en: {
     // Header & Navigation
@@ -250,7 +249,6 @@ export const translations = {
     footer_desc_en: "Find nearby pharmacies, check live medicine availability, and get direct map routes across Kerala.",
     key_districts: "Key Districts",
     contact_support: "Contact & Support",
-    dhs_approved: "DHS & Drugs Control Approved",
     designed_by: "Designed & Developed by",
     privacy_policy: "Privacy Policy",
     terms_of_service: "Terms of Service",
@@ -302,7 +300,7 @@ export const translations = {
 
     // Home Page - SEO Block
     seo_title: "Marunnundo.in - Kerala Pharmacy & Medicine Search Directory",
-    seo_desc: "Marunnundo is an online platform that helps you check in real-time if medicines are available in medical shops in your local area. Many people also search Google for marunnundo.in, marunn undo, marun indo, marun, or marunundo to reach our website. This system can be used to find and contact pharmacies in any part of Kerala.",
+    seo_desc: "Marunnundo is an online platform that helps you check in real-time if medicines are available in medical shops in your local area. This system can be used to find and contact pharmacies in any part of Kerala.",
     seo_queries: "Frequently searched queries: Marunnundo app, marunn undo kochi, marun indo medicine search, marun shop near me, മരുന്നുണ്ടോ മെഡിക്കൽ ഷോപ്പുകൾ.",
 
     // Pharmacy Details Page
@@ -361,9 +359,9 @@ export const translations = {
     // Register Page
     register_title: "Register New Account",
     register_subtitle: "Open a new account on Marunnundo.in",
-    patient_tab: "Patient / User",
+    patient_tab: "User",
     owner_tab: "Pharmacy Owner",
-    personal_info_section: "Owner / User Profile",
+    personal_info_section: "Pharmacy Owner Profile",
     name_label: "Full Name",
     email_reg_label: "Email Address",
     phone_label: "Phone Number",
@@ -395,12 +393,12 @@ export const translations = {
     login_here: "Login Here",
 
     // Merchant / Owner Panel Page
-    merchant_portal: "Merchant Portal",
+    pharmacy_portal: "Pharmacy Panel",
     welcome_back: "Welcome back,",
     merchant_desc: "Manage stock availability, track analytics, and handle patient reviews.",
     add_medicine_btn: "Add Medicine",
     no_pharmacy_registered: "No Pharmacy Registered",
-    no_pharmacy_desc: "You are logged in as a merchant, but have no registered shop. Please register a shop or contact support.",
+    no_pharmacy_desc: "You are logged in as a pharmacy, but have no registered shop. Please register a shop or contact support.",
     register_store_btn: "Register Store",
     metrics_sku: "Total Medicine SKUs",
     metrics_low_stock: "Low Stock Alert",
@@ -426,7 +424,7 @@ export const translations = {
     admin_active_pharmacies: "Active Pharmacies",
     admin_verified_active: "Verified Active Shops",
     admin_pending_approvals: "Pending Approvals",
-    admin_awaiting_dhs: "Awaiting DHS Verifications",
+    admin_awaiting_verification: "Awaiting Admin Verification",
     admin_total_medicines: "Total Medicines",
     admin_registered_inventory: "Registered inventory items",
     admin_search_placeholder: "Search shop name, address, license number or owner's name...",

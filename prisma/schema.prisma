@@ -7,7 +7,6 @@ generator client {
 }
 
 enum Role {
-  USER
   OWNER
   SUPERADMIN
 }
@@ -18,9 +17,8 @@ model User {
   password      String
   name          String
   phone         String?
-  role          Role           @default(USER)
+  role          Role           @default(OWNER)
   pharmacies    Pharmacy[]     // For owners
-  reviews       Review[]       // Reviews submitted by users
   notifications Notification[]
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
@@ -50,7 +48,6 @@ model Pharmacy {
   ownerId           String
   owner             User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   medicines         Medicine[]
-  reviews           Review[]
   operatingHours    OperatingHours[]
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
@@ -80,23 +77,6 @@ model Medicine {
   @@index([name, genericName])
 }
 
-model Review {
-  id         String   @id @default(uuid())
-  rating     Int      // 1 to 5
-  comment    String?
-  images     String[] // Array of image URLs
-  reply      String?  // Owner reply
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  pharmacyId String
-  pharmacy   Pharmacy @relation(fields: [pharmacyId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index([pharmacyId])
-  @@index([userId])
-}
-
 model OperatingHours {
   id         String   @id @default(uuid())
   day        String   // "Monday", "Tuesday", etc.
@@ -120,3 +100,4 @@ model Notification {
 
   @@index([userId, read])
 }
+

@@ -31,7 +31,6 @@ export async function getNearbyPharmacies(lat?: number, lng?: number, radiusKm: 
         _count: {
           select: {
             medicines: true,
-            reviews: true,
           },
         },
       },
@@ -123,7 +122,6 @@ export async function searchPharmacies(
         _count: {
           select: {
             medicines: true,
-            reviews: true,
           },
         },
         medicines: {
@@ -172,62 +170,9 @@ export async function getPharmacyDetails(id: string) {
       medicines: {
         orderBy: { name: 'asc' },
       },
-      reviews: {
-        include: {
-          user: {
-            select: {
-              name: true,
-            },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-      },
       operatingHours: true,
     },
   });
 }
 
-// 4. Submit user review
-export async function submitReview(pharmacyId: string, rating: number, comment: string) {
-  try {
-    const session = await getSession();
-    if (!session) {
-      return { success: false, error: 'Please log in to submit a review' };
-    }
 
-    if (rating < 1 || rating > 5) {
-      return { success: false, error: 'Rating must be between 1 and 5' };
-    }
-
-    const review = await db.review.create({
-      data: {
-        rating,
-        comment: comment || null,
-        userId: session.id,
-        pharmacyId,
-      },
-    });
-
-    // Recalculate average rating for pharmacy
-    const reviews = await db.review.findMany({
-      where: { pharmacyId },
-      select: { rating: true },
-    });
-
-    const averageRating =
-      reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length;
-
-    await db.pharmacy.update({
-      where: { id: pharmacyId },
-      data: { rating: parseFloat(averageRating.toFixed(1)) },
-    });
-
-    revalidatePath(`/pharmacy/${pharmacyId}`);
-    revalidatePath('/');
-
-    return { success: true, review };
-  } catch (error: any) {
-    console.error('Submit review error:', error);
-    return { success: false, error: error.message || 'Failed to submit review' };
-  }
-}

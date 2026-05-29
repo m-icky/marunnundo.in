@@ -76,11 +76,7 @@ export default function Header({ session }: HeaderProps) {
               {t('home')}
             </Link>
 
-            {session?.role === 'USER' && (
-              <span className="text-slate-600 text-xs font-semibold px-2.5 py-1 bg-slate-100 rounded-full">
-                {t('patient')}: <span className="font-bold text-slate-800">{session.name}</span>
-              </span>
-            )}
+
 
             {session?.role === 'OWNER' && (
               <>
@@ -112,20 +108,13 @@ export default function Header({ session }: HeaderProps) {
             )}
 
             {!session ? (
-              <div className="flex items-center gap-3">
-                <Link
-                  href="/login"
-                  className="text-slate-600 hover:text-emerald-800 font-bold text-sm px-4 py-2 transition-colors"
-                >
-                  {t('login')}
-                </Link>
-                <Link
-                  href="/register"
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-lg shadow-emerald-600/10 hover:shadow-emerald-600/20 transition-all active:scale-98"
-                >
-                  {t('register')}
-                </Link>
-              </div>
+              <Link
+                href="/login"
+                className="text-slate-600 hover:text-emerald-700 font-extrabold text-sm px-4 py-2 border border-slate-200 hover:border-emerald-500 rounded-xl transition-all active:scale-98 flex items-center gap-1.5"
+              >
+                <LayoutDashboard className="w-4 h-4 text-emerald-600" />
+                <span>{t('pharmacy_portal')}</span>
+              </Link>
             ) : (
               <button
                 onClick={handleLogout}
@@ -189,11 +178,7 @@ export default function Header({ session }: HeaderProps) {
             {t('home')}
           </Link>
 
-          {session?.role === 'USER' && (
-            <div className="text-slate-600 text-xs font-semibold py-1">
-              {t('patient')}: <span className="font-bold text-slate-800">{session.name}</span>
-            </div>
-          )}
+
 
           {session?.role === 'OWNER' && (
             <>
@@ -232,16 +217,10 @@ export default function Header({ session }: HeaderProps) {
               <Link
                 href="/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-center text-slate-700 hover:text-emerald-800 font-bold text-base py-2.5 rounded-xl border border-slate-200 transition-colors"
+                className="flex items-center justify-center gap-2 w-full text-slate-700 hover:text-emerald-800 font-bold text-base py-2.5 rounded-xl border border-slate-200 transition-colors"
               >
-                {t('login')}
-              </Link>
-              <Link
-                href="/register"
-                onClick={() => setMobileMenuOpen(false)}
-                className="text-center bg-emerald-600 text-white font-bold text-base py-2.5 rounded-xl shadow-lg transition-colors"
-              >
-                {t('register')}
+                <LayoutDashboard className="w-4 h-4 text-emerald-600" />
+                <span>{t('pharmacy_portal')}</span>
               </Link>
             </div>
           ) : (

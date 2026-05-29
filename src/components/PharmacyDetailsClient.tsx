@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import MapLoader from '@/components/MapLoader';
-import { submitReview } from '@/app/actions/public';
+
 import { JWTPayload } from '@/lib/jwt';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
@@ -36,16 +36,7 @@ interface Medicine {
   isAvailable: boolean;
 }
 
-interface Review {
-  id: string;
-  rating: number;
-  comment: string | null;
-  reply: string | null;
-  createdAt: Date;
-  user: {
-    name: string;
-  };
-}
+
 
 interface OperatingHours {
   id: string;
@@ -72,7 +63,6 @@ interface Pharmacy {
   isVerified: boolean;
   isSuspended: boolean;
   medicines: Medicine[];
-  reviews: Review[];
   operatingHours: OperatingHours[];
 }
 
@@ -94,12 +84,7 @@ export default function PharmacyDetailsClient({ pharmacy, session }: Props) {
   const [medQuery, setMedQuery] = useState('');
   const [prescriptionFilter, setPrescriptionFilter] = useState<'all' | 'required' | 'otc'>('all');
 
-  // Review submission state
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState('');
-  const [reviewError, setReviewError] = useState('');
-  const [reviewSuccess, setReviewSuccess] = useState(false);
-  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+
 
   // Check if store is open based on simple static hour check
   const checkIsOpenNow = () => {
@@ -182,41 +167,7 @@ export default function PharmacyDetailsClient({ pharmacy, session }: Props) {
     return matchesQuery && matchesRx;
   });
 
-  // Handle Review Creation
-  const handleReviewSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!comment.trim()) {
-      setReviewError('Please enter a comment.');
-      return;
-    }
 
-    setReviewError('');
-    setReviewSuccess(false);
-    setIsSubmittingReview(true);
-
-    try {
-      const response = await submitReview(
-        pharmacy.id,
-        rating,
-        comment.trim()
-      );
-
-      if (response.success) {
-        setReviewSuccess(true);
-        setComment('');
-        setRating(5);
-        // Refresh page router for fresh DB fetch
-        router.refresh();
-      } else {
-        setReviewError(response.error || 'Failed to submit review.');
-      }
-    } catch (err) {
-      console.error(err);
-      setReviewError('An unexpected error occurred.');
-    } finally {
-      setIsSubmittingReview(false);
-    }
-  };
 
   // SEO Schema details
   const pharmacySchema = {
@@ -299,11 +250,6 @@ export default function PharmacyDetailsClient({ pharmacy, session }: Props) {
             </p>
 
             <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm font-bold text-slate-600 sm:text-slate-200">
-              <span className="flex items-center gap-0.5 text-amber-500">
-                <Star className="w-4 h-4 fill-amber-500" />
-                {pharmacy.rating > 0 ? pharmacy.rating.toFixed(1) : t('new_badge')} ({pharmacy.reviews.length} {t('reviews_count')})
-              </span>
-              <span className="hidden sm:inline text-slate-400">•</span>
               <span className={`px-2.5 py-0.5 rounded-full text-xs font-extrabold ${
                 isOpenNow ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
               }`}>
@@ -557,121 +503,7 @@ export default function PharmacyDetailsClient({ pharmacy, session }: Props) {
             )}
           </div>
 
-          {/* REVIEWS CARD */}
-          <div className="glass-card rounded-2xl p-6 border border-slate-200/80 shadow-md flex flex-col gap-6">
-            <h2 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-2 border-b border-slate-100 pb-3">
-              {t('patient_reviews')}
-              <span className="text-xs font-bold px-2 py-0.5 bg-slate-100 text-slate-600 rounded-full">
-                {pharmacy.reviews.length} {t('total_label')}
-              </span>
-            </h2>
 
-            {/* Review Input Box */}
-            {session ? (
-              <form onSubmit={handleReviewSubmit} className="bg-slate-50 border border-slate-200/80 p-4 rounded-xl flex flex-col gap-4">
-                <h4 className="font-bold text-slate-800 text-sm">{t('write_review')}</h4>
-                
-                {/* Stars selector */}
-                <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-slate-500 font-bold">{t('rating_label')}:</span>
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map(star => (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => setRating(star)}
-                        className="text-amber-500 hover:scale-110 active:scale-90 transition-transform cursor-pointer"
-                      >
-                        <Star className={`w-5 h-5 ${star <= rating ? 'fill-amber-500 text-amber-500' : 'text-slate-300'}`} />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Comment Text */}
-                <textarea
-                  placeholder={t('comment_placeholder')}
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                  className="w-full p-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm bg-white min-h-[80px]"
-                  required
-                />
-
-                {reviewError && (
-                  <p className="text-xs font-bold text-red-600 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    {reviewError}
-                  </p>
-                )}
-
-                {reviewSuccess && (
-                  <p className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 p-2 rounded flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                    {t('review_success_msg')}
-                  </p>
-                )}
-
-                <button
-                  type="submit"
-                  disabled={isSubmittingReview}
-                  className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-2 rounded-xl text-xs transition-all shadow-md self-end px-5 active:scale-95 cursor-pointer"
-                >
-                  {isSubmittingReview ? t('submitting_btn') : t('submit_review_btn')}
-                </button>
-              </form>
-            ) : (
-              <div className="bg-slate-50 border border-slate-200/80 p-4 rounded-xl text-center text-xs text-slate-500 font-bold">
-                {t('review_login_notice')}{' '}
-                <Link href="/login" className="text-emerald-700 underline hover:text-emerald-800">
-                  {t('login')}
-                </Link>
-                .
-              </div>
-            )}
-
-            {/* Reviews List */}
-            {pharmacy.reviews.length === 0 ? (
-              <p className="text-center py-6 text-xs text-slate-400 font-semibold italic">
-                {t('no_reviews_yet')}
-              </p>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {pharmacy.reviews.map(review => (
-                  <div key={review.id} className="p-4 border border-slate-100 rounded-xl bg-slate-50/50 flex flex-col gap-2">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-800 text-xs font-bold">
-                          <User className="w-4 h-4" />
-                        </div>
-                        <span className="font-bold text-slate-800 text-xs">{review.user.name}</span>
-                      </div>
-                      <span className="text-[10px] text-slate-400 font-semibold">
-                        {new Date(review.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-
-                    <div className="flex gap-0.5">
-                      {[1, 2, 3, 4, 5].map(star => (
-                        <Star key={star} className={`w-3.5 h-3.5 ${star <= review.rating ? 'fill-amber-500 text-amber-500' : 'text-slate-200'}`} />
-                      ))}
-                    </div>
-
-                    <p className="text-slate-600 text-sm mt-1 leading-relaxed font-medium">{review.comment}</p>
-
-                    {/* Merchant Reply if exists */}
-                    {review.reply && (
-                      <div className="mt-3 p-3 bg-emerald-50/70 border border-emerald-100 rounded-lg flex flex-col gap-1 ml-4 animate-in slide-in-from-left-2 duration-150">
-                        <span className="text-[10px] font-bold text-emerald-800 uppercase tracking-widest flex items-center gap-1">
-                          💬 {t('owner_reply_title')}
-                        </span>
-                        <p className="text-slate-600 text-xs font-medium leading-relaxed italic">{review.reply}</p>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
 
         </div>
 

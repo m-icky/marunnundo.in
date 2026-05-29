@@ -14,7 +14,6 @@ async function main() {
   // 1. Clear existing data to ensure a clean start
   await prisma.notification.deleteMany();
   await prisma.operatingHours.deleteMany();
-  await prisma.review.deleteMany();
   await prisma.medicine.deleteMany();
   await prisma.pharmacy.deleteMany();
   await prisma.user.deleteMany();

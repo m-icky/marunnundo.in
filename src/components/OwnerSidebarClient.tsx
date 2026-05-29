@@ -29,7 +29,6 @@ export default function OwnerSidebarClient({ primaryPharmacy }: Props) {
     { href: '/owner',            icon: LayoutDashboard, label: t('owner_nav_overview'),  exact: true },
     { href: '/owner/shop',       icon: Settings,        label: t('owner_nav_settings'),  exact: true },
     { href: '/owner/medicines',  icon: PlusCircle,      label: t('owner_nav_inventory'), exact: false },
-    { href: '/owner/reviews',    icon: MessageSquare,   label: t('owner_nav_reviews'),   exact: false },
   ];
 
   const isActive = (href: string, exact: boolean) =>

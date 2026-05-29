@@ -246,15 +246,7 @@ export async function getPharmacyAnalytics(pharmacyId: string) {
   const outOfStock = medicines.filter((m: any) => m.quantity === 0).length;
   const totalValue = medicines.reduce((sum: number, m: any) => sum + (m.price * m.quantity), 0);
 
-  const reviews = await db.review.findMany({
-    where: { pharmacyId },
-  });
-
-  const avgRating = reviews.length > 0
-    ? reviews.reduce((sum: number, r: any) => sum + r.rating, 0) / reviews.length
-    : 0;
-
-  // Let's create simulated visitor stats based on the medicines and reviews for nice analytics charts
+  // Let's create simulated visitor stats based on the medicines for nice analytics charts
   const visitorStats = [
     { name: 'Jan', visits: 120, searches: 85 },
     { name: 'Feb', visits: 180, searches: 130 },
@@ -268,34 +260,8 @@ export async function getPharmacyAnalytics(pharmacyId: string) {
     lowStock,
     outOfStock,
     totalValue,
-    avgRating,
-    totalReviews: reviews.length,
     visitorStats,
   };
-}
-
-// 5. Review Replacements / Replies
-export async function replyToReview(pharmacyId: string, reviewId: string, reply: string) {
-  try {
-    await checkOwnerAuth(pharmacyId);
-
-    if (!reply.trim()) {
-      return { success: false, error: 'Reply content cannot be empty' };
-    }
-
-    const updated = await db.review.update({
-      where: { id: reviewId, pharmacyId },
-      data: { reply },
-    });
-
-    revalidatePath(`/pharmacy/${pharmacyId}`);
-    revalidatePath('/owner');
-
-    return { success: true, review: updated };
-  } catch (error: any) {
-    console.error('Reply review error:', error);
-    return { success: false, error: error.message || 'Failed to submit review reply' };
-  }
 }
 
 // 6. Get Operating Hours

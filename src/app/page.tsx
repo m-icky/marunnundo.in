@@ -117,7 +117,7 @@ export default function HomePage() {
         setLocationStatus('failed');
         alert('Could not detect location. Please select a city below or type a query.');
       },
-      { enableHighAccuracy: true, timeout: 10000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
     );
   };
 
@@ -463,6 +463,19 @@ export default function HomePage() {
               centerLng={lng || 76.2801}
               zoom={lat && lng ? 14 : 11}
             />
+            {/* Floating Locate Me Button Overlay */}
+            <button
+              onClick={detectLocation}
+              disabled={locationStatus === 'detecting'}
+              className="absolute bottom-4 right-4 z-[400] bg-white hover:bg-slate-50 text-slate-800 p-3 rounded-full shadow-lg border border-slate-200/80 flex items-center justify-center transition-all hover:scale-105 active:scale-95 group cursor-pointer disabled:opacity-50"
+              title={language === 'ml' ? 'എന്റെ സ്ഥാനം കാണിക്കുക' : 'Show my current location'}
+            >
+              <Navigation 
+                className={`w-5 h-5 text-emerald-600 transition-transform ${
+                  locationStatus === 'detecting' ? 'animate-spin' : 'group-hover:rotate-45'
+                }`} 
+              />
+            </button>
           </div>
         </div>
 

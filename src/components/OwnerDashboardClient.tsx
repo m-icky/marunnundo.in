@@ -21,15 +21,12 @@ interface Props {
     totalMedicines: number;
     lowStock: number;
     totalValue: number;
-    avgRating: number;
-    totalReviews: number;
     visitorStats: { name: string; visits: number; searches: number }[];
   } | null;
-  recentReviews: any[];
   pharmacyId: string | null;
 }
 
-export default function OwnerDashboardClient({ sessionName, analytics, recentReviews, pharmacyId }: Props) {
+export default function OwnerDashboardClient({ sessionName, analytics, pharmacyId }: Props) {
   const { t } = useLanguage();
 
   if (!pharmacyId || !analytics) {
@@ -78,7 +75,7 @@ export default function OwnerDashboardClient({ sessionName, analytics, recentRev
         <div className="flex flex-col gap-2">
           <div className="inline-flex items-center gap-1 bg-slate-800/80 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-full w-max border border-slate-700">
             <Sparkles className="w-3 h-3 animate-spin text-emerald-400" /> 
-            <span>{t('merchant_portal').toUpperCase()}</span>
+            <span>{t('pharmacy_portal').toUpperCase()}</span>
           </div>
           <h1 className="text-2xl sm:text-3.5xl font-black tracking-tight leading-none">
             {t('welcome_back')} {sessionName}!
@@ -136,28 +133,25 @@ export default function OwnerDashboardClient({ sessionName, analytics, recentRev
           </div>
         </div>
 
-        {/* Reviews average */}
+        {/* Secure Status */}
         <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm bg-white">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('metrics_rating')}</span>
-            <span className="text-3xl font-black text-amber-500 leading-none flex items-center gap-1">
-              <Star className="w-6 h-6 fill-amber-500 text-amber-500" />
-              {analytics.avgRating > 0 ? analytics.avgRating.toFixed(1) : '0.0'}
-            </span>
-            <span className="text-[10px] font-bold text-slate-500">{t('metrics_rating_desc')} ({analytics.totalReviews})</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('owner_nav_settings')}</span>
+            <span className="text-2xl font-black text-emerald-600 leading-none">Active</span>
+            <span className="text-[10px] font-bold text-slate-500">Secure Merchant Portal</span>
           </div>
-          <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center">
-            <Star className="w-6 h-6 fill-amber-500" />
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+            <Sparkles className="w-6 h-6" />
           </div>
         </div>
 
       </section>
 
       {/* DETAILED STATS & ANALYTICS VISUAL CHART */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 gap-6">
         
-        {/* SVG VISITOR GRAPH (2 Cols on desktop) */}
-        <div className="lg:col-span-2 glass-card rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col gap-5 bg-white">
+        {/* SVG VISITOR GRAPH */}
+        <div className="glass-card rounded-2xl p-6 border border-slate-200/80 shadow-sm flex flex-col gap-5 bg-white">
           <div className="flex justify-between items-center pb-3 border-b border-slate-100">
             <h3 className="font-extrabold text-slate-800 text-base flex items-center gap-1.5">
               <TrendingUp className="w-5 h-5 text-emerald-600" />
@@ -240,63 +234,6 @@ export default function OwnerDashboardClient({ sessionName, analytics, recentRev
               {t('analytics_queries')}
             </span>
           </div>
-        </div>
-
-        {/* QUICK REVIEWS LOG PANEL */}
-        <div className="glass-card rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between bg-white">
-          <div className="flex flex-col gap-4">
-            <div className="flex justify-between items-center pb-3 border-b border-slate-100">
-              <h3 className="font-extrabold text-slate-800 text-base flex items-center gap-1.5">
-                <MessageSquare className="w-5 h-5 text-emerald-600" />
-                {t('recent_reviews')}
-              </h3>
-              <Link 
-                href="/owner/reviews"
-                className="text-[11px] font-extrabold text-emerald-600 hover:text-emerald-700 flex items-center cursor-pointer"
-              >
-                All <ChevronRight className="w-3 h-3" />
-              </Link>
-            </div>
-
-            {recentReviews.length === 0 ? (
-              <p className="text-slate-400 font-semibold italic text-xs text-center py-10">
-                {t('no_reviews_yet_owner')}
-              </p>
-            ) : (
-              <div className="flex flex-col gap-3">
-                {recentReviews.map(review => (
-                  <div key={review.id} className="p-3 border border-slate-50 rounded-xl bg-slate-50/50 flex flex-col gap-1.5">
-                    <div className="flex justify-between items-center text-[10px] font-bold">
-                      <span className="text-slate-700">{review.user.name}</span>
-                      <span className="text-amber-500 flex items-center gap-0.5">
-                        ⭐ {review.rating}
-                      </span>
-                    </div>
-                    <p className="text-slate-600 text-xs font-semibold line-clamp-2 leading-relaxed">
-                      {review.comment}
-                    </p>
-                    {review.reply ? (
-                      <span className="text-[9px] font-extrabold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded self-start mt-1">
-                        {t('replied')}
-                      </span>
-                    ) : (
-                      <span className="text-[9px] font-extrabold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded self-start mt-1">
-                        {t('needs_reply')}
-                      </span>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <Link
-            href="/owner/reviews"
-            className="w-full mt-4 flex items-center justify-center gap-1 bg-slate-900 hover:bg-emerald-600 text-white font-bold py-2.5 rounded-xl transition-all shadow-md active:scale-98 text-xs cursor-pointer"
-          >
-            <span>{t('reply_reviews_btn')}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
         </div>
 
       </section>

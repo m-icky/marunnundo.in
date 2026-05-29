@@ -57,10 +57,6 @@ export default function Footer() {
                 <Mail className="w-4 h-4 text-emerald-400" />
                 <span>support@marunnundo.in</span>
               </li>
-              <li className="flex items-center gap-2 text-xs text-emerald-400/90 font-medium">
-                <ShieldCheck className="w-4 h-4" />
-                <span>{t('dhs_approved')}</span>
-              </li>
             </ul>
           </div>
         </div>

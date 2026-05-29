@@ -16,7 +16,6 @@ async function checkAdminAuth() {
 export async function getAdminStats() {
   await checkAdminAuth();
 
-  const totalUsers = await db.user.count({ where: { role: 'USER' } });
   const totalOwners = await db.user.count({ where: { role: 'OWNER' } });
   
   const totalPharmacies = await db.pharmacy.count();
@@ -27,7 +26,6 @@ export async function getAdminStats() {
   const totalMedicines = await db.medicine.count();
 
   return {
-    totalUsers,
     totalOwners,
     totalPharmacies,
     verifiedPharmacies,
@@ -53,7 +51,6 @@ export async function getAllPharmaciesForAdmin() {
       _count: {
         select: {
           medicines: true,
-          reviews: true,
         },
       },
     },

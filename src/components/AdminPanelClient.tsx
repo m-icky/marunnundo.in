@@ -37,12 +37,10 @@ interface Pharmacy {
   };
   _count: {
     medicines: number;
-    reviews: number;
   };
 }
 
 interface Stats {
-  totalUsers: number;
   totalOwners: number;
   totalPharmacies: number;
   verifiedPharmacies: number;
@@ -154,12 +152,12 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
 
       {/* METRIC BADGES */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {/* Total Users */}
+        {/* Total Owners */}
         <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm bg-white">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('admin_total_users')}</span>
-            <span className="text-3xl font-black text-slate-800 leading-none">{stats.totalUsers + stats.totalOwners}</span>
-            <span className="text-[10px] font-bold text-slate-500">{stats.totalUsers} {t('patient_tab').split(' / ')[0]} | {stats.totalOwners} {t('owner_tab')}</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('owner_tab')}</span>
+            <span className="text-3xl font-black text-slate-800 leading-none">{stats.totalOwners}</span>
+            <span className="text-[10px] font-bold text-slate-500">{t('admin_total_users')}</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
             <Users className="w-6 h-6" />
@@ -183,7 +181,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
           <div className="flex flex-col gap-1.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-amber-600">{t('admin_pending_approvals')}</span>
             <span className="text-3xl font-black text-amber-600 leading-none">{stats.pendingPharmacies}</span>
-            <span className="text-[10px] font-bold text-slate-500">{t('admin_awaiting_dhs')}</span>
+            <span className="text-[10px] font-bold text-slate-500">{t('admin_awaiting_verification')}</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
             <AlertTriangle className="w-6 h-6 animate-pulse" />
@@ -309,8 +307,6 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
                     </span>
                     <span>•</span>
                     <span>{t('medicines')}: {pharmacy._count.medicines}</span>
-                    <span>•</span>
-                    <span>{t('patient_reviews')}: {pharmacy._count.reviews}</span>
                   </div>
                 </div>
 
