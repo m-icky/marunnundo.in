@@ -15,8 +15,42 @@ const defaultIcon = L.icon({
   shadowSize: [41, 41]
 });
 
-const userLocationIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', // Premium user avatar icon for user location
+const userLocationIcon = L.divIcon({
+  html: `
+    <div class="relative flex items-center justify-center w-8 h-8">
+      <style>
+        @keyframes map-pop {
+          0%, 100% {
+            transform: scale(1);
+          }
+          50% {
+            transform: scale(1.22);
+          }
+        }
+        @keyframes map-pulse {
+          0% {
+            transform: scale(0.6);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(2.2);
+            opacity: 0;
+          }
+        }
+        .map-pop-animation {
+          animation: map-pop 2s ease-in-out infinite;
+        }
+        .map-pulse-animation {
+          animation: map-pulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+        }
+      </style>
+      <!-- Pulsing outer ring -->
+      <div class="absolute inset-0 w-8 h-8 rounded-full bg-blue-500/40 map-pulse-animation"></div>
+      <!-- User avatar icon with popping animation -->
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-8 h-8 relative z-10 map-pop-animation filter drop-shadow-md" />
+    </div>
+  `,
+  className: '', // Clear Leaflet default white square background
   iconSize: [32, 32],
   iconAnchor: [16, 16],
   popupAnchor: [0, -16],
