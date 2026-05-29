@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { getNearbyPharmacies, searchPharmacies } from '@/app/actions/public';
 import MapLoader from '@/components/MapLoader';
+import LogoLoader from '@/components/LogoLoader';
 import { useLanguage } from '@/context/LanguageContext';
 import { 
   MapPin, 
@@ -44,10 +45,20 @@ interface PharmacyItem {
 }
 
 const DISTRICT_PRESETS = [
-  { name: 'Kochi (Ernakulam)', lat: 9.9723, lng: 76.2801, label: 'കൊച്ചി' },
-  { name: 'Trivandrum', lat: 8.5061, lng: 76.9515, label: 'തിരുവനന്തപുരം' },
+  { name: 'Kasaragod', lat: 12.5102, lng: 74.9852, label: 'കാസർഗോഡ്' },
+  { name: 'Kannur', lat: 11.8745, lng: 75.3704, label: 'കണ്ണൂർ' },
+  { name: 'Wayanad', lat: 11.6854, lng: 76.1320, label: 'വയനാട്' },
   { name: 'Kozhikode', lat: 11.2588, lng: 75.7804, label: 'കോഴിക്കോട്' },
-  { name: 'Thrissur', lat: 10.5276, lng: 76.2144, label: 'തൃശ്ശൂർ' }
+  { name: 'Malappuram', lat: 11.0735, lng: 76.0740, label: 'മലപ്പുറം' },
+  { name: 'Palakkad', lat: 10.7867, lng: 76.6548, label: 'പാലക്കാട്' },
+  { name: 'Thrissur', lat: 10.5276, lng: 76.2144, label: 'തൃശ്ശൂർ' },
+  { name: 'Kochi (Ernakulam)', lat: 9.9723, lng: 76.2801, label: 'കൊച്ചി' },
+  { name: 'Idukki', lat: 9.9189, lng: 77.1025, label: 'ഇടുക്കി' },
+  { name: 'Kottayam', lat: 9.5916, lng: 76.5224, label: 'കോട്ടയം' },
+  { name: 'Alappuzha', lat: 9.4981, lng: 76.3388, label: 'ആലപ്പുഴ' },
+  { name: 'Pathanamthitta', lat: 9.2648, lng: 76.7870, label: 'പത്തനംതിട്ട' },
+  { name: 'Kollam', lat: 8.8932, lng: 76.6141, label: 'കൊല്ലം' },
+  { name: 'Trivandrum', lat: 8.5061, lng: 76.9515, label: 'തിരുവനന്തപുരം' }
 ];
 
 export default function HomePage() {
@@ -129,9 +140,7 @@ export default function HomePage() {
   const getPresetLabel = (presetName: string, defaultLabel: string) => {
     if (language === 'en') {
       if (presetName.includes('Kochi')) return 'Kochi';
-      if (presetName.includes('Trivandrum')) return 'Trivandrum';
-      if (presetName.includes('Kozhikode')) return 'Kozhikode';
-      if (presetName.includes('Thrissur')) return 'Thrissur';
+      return presetName;
     }
     return defaultLabel;
   };
@@ -143,10 +152,8 @@ export default function HomePage() {
     if (language === 'en') {
       return selectedDistrictName;
     } else {
-      if (selectedDistrictName.includes('Kochi')) return 'കൊച്ചി';
-      if (selectedDistrictName.includes('Trivandrum')) return 'തിരുവനന്തപുരം';
-      if (selectedDistrictName.includes('Kozhikode')) return 'കോഴിക്കോട്';
-      if (selectedDistrictName.includes('Thrissur')) return 'തൃശ്ശൂർ';
+      const preset = DISTRICT_PRESETS.find(p => p.name === selectedDistrictName);
+      if (preset) return preset.label;
     }
     return selectedDistrictName;
   };
@@ -183,7 +190,7 @@ export default function HomePage() {
             <Sparkles className="w-3.5 h-3.5" />
             <span>{t('live_in_kerala')}</span>
           </div>
-          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight">
             {t('hero_title')}
           </h1>
           <p className="text-base sm:text-lg text-slate-600 max-w-xl font-medium">
@@ -322,18 +329,7 @@ export default function HomePage() {
 
             {/* Loading Skeleton */}
             {isLoading ? (
-              <div className="flex flex-col gap-4">
-                {[1, 2, 3].map((n) => (
-                  <div key={n} className="glass-card rounded-2xl p-4 border border-slate-100 flex gap-4 h-36">
-                    <div className="w-24 h-full rounded-xl shimmer"></div>
-                    <div className="flex-1 flex flex-col gap-3 py-1">
-                      <div className="w-1/2 h-5 rounded shimmer"></div>
-                      <div className="w-3/4 h-3 rounded shimmer"></div>
-                      <div className="w-1/3 h-4 rounded shimmer"></div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <LogoLoader variant="inline" label={t('detecting_location')} />
             ) : pharmacies.length === 0 ? (
               <div className="glass-card rounded-2xl p-8 border border-slate-200 text-center flex flex-col items-center gap-3">
                 <AlertCircle className="w-12 h-12 text-slate-400" />
@@ -442,8 +438,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: STICKY MAP COMPONENT (5 cols) */}
-        <div className="lg:col-span-5 lg:sticky lg:top-24 h-[400px] lg:h-[600px] rounded-3xl overflow-hidden border border-slate-200/80 shadow-lg relative bg-white flex flex-col">
+        {/* RIGHT COLUMN: MAP COMPONENT – below listings on mobile, sticky side panel on lg */}
+        <div className="lg:col-span-5 lg:sticky lg:top-24 h-[300px] sm:h-[400px] lg:h-[600px] rounded-3xl overflow-hidden border border-slate-200/80 shadow-lg relative bg-white flex flex-col">
           <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between z-20">
             <span className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-emerald-600" />

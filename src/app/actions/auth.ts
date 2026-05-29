@@ -128,6 +128,8 @@ interface RegisterOwnerInput {
   password: string;
   shopName: string;
   address: string;
+  pincode: string;
+  district: string;
   licenseNumber: string;
   contactNumber: string;
   whatsappNumber: string | null;
@@ -147,6 +149,8 @@ export async function registerOwner(data: RegisterOwnerInput) {
       password,
       shopName,
       address,
+      pincode,
+      district,
       licenseNumber,
       contactNumber,
       whatsappNumber,
@@ -157,8 +161,8 @@ export async function registerOwner(data: RegisterOwnerInput) {
       longitude
     } = data;
 
-    if (!name || !email || !password || !shopName || !licenseNumber || !address || !contactNumber || latitude === undefined || longitude === undefined) {
-      return { success: false, error: 'All fields are required' };
+    if (!name || !email || !password || !shopName || !licenseNumber || !address || !pincode || !district || !contactNumber || latitude === undefined || longitude === undefined) {
+      return { success: false, error: 'All fields are required including district and pincode' };
     }
 
     // Check if email or license taken
@@ -192,6 +196,8 @@ export async function registerOwner(data: RegisterOwnerInput) {
           name: shopName,
           licenseNumber,
           address,
+          pincode: pincode || null,
+          district: district || null,
           contactNumber,
           whatsappNumber: whatsappNumber || contactNumber,
           deliveryAvailable,

@@ -14,8 +14,9 @@ export default function Footer() {
           {/* Brand Info */}
           <div className="md:col-span-2 flex flex-col gap-4">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg bg-emerald-500 flex items-center justify-center text-slate-900 shadow-md">
-                <HeartPulse className="w-5 h-5" />
+              <div className="w-12 h-12 rounded-lg overflow-hidden bg-white flex items-center justify-center border border-slate-750 p-0.5 shadow-md">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/logo.png" alt="Marunnundo Logo" className="w-full h-full object-contain" />
               </div>
               <span className="text-xl font-black text-white tracking-tight">
                 മരുന്നുണ്ടോ<span className="text-emerald-400">.in</span>

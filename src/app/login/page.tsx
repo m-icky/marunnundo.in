@@ -52,8 +52,9 @@ export default function LoginPage() {
         {/* Branding header */}
         <div className="flex flex-col items-center gap-3 text-center mb-8">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg shadow-emerald-600/20 group-hover:scale-105 transition-transform duration-200">
-              <HeartPulse className="w-6 h-6 animate-pulse" />
+            <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg shadow-emerald-600/20 group-hover:scale-105 transition-transform duration-200 bg-white flex items-center justify-center border border-slate-100 p-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="Marunnundo Logo" className="w-full h-full object-contain" />
             </div>
           </Link>
           <div className="flex flex-col mt-2">

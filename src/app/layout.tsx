@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     siteName: 'Marunnundo.in',
     images: [
       {
-        url: 'https://cdn-icons-png.flaticon.com/512/2966/2966327.png',
+        url: '/logo.png',
         width: 512,
         height: 512,
         alt: 'Marunnundo Logo',
@@ -72,11 +72,11 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'മരുന്നുണ്ടോ.in — സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്താം',
     description: 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക.',
-    images: ['https://cdn-icons-png.flaticon.com/512/2966/2966327.png'],
+    images: ['/logo.png'],
   },
   icons: {
-    icon: 'https://cdn-icons-png.flaticon.com/512/2966/2966327.png',
-    apple: 'https://cdn-icons-png.flaticon.com/512/2966/2966327.png',
+    icon: '/favicon.ico',
+    apple: '/logo.png',
   },
   alternates: {
     canonical: '/',

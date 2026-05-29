@@ -28,8 +28,9 @@ export default function Header({ session }: HeaderProps) {
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo and Brand */}
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform duration-200">
-              <HeartPulse className="w-5 h-5" />
+            <div className="w-12 h-12 rounded-xl overflow-hidden shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform duration-200 bg-white flex items-center justify-center border border-slate-100 p-0.5">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo.png" alt="Marunnundo Logo" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col">
               <span className="text-xl sm:text-2xl font-black text-emerald-800 tracking-tight font-sans leading-none flex items-center gap-1">

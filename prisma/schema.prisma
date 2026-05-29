@@ -33,6 +33,8 @@ model Pharmacy {
   name              String
   licenseNumber     String           @unique
   address           String
+  pincode           String           // 6-digit postal code (required)
+  district          String           // Kerala district name (required)
   contactNumber     String
   whatsappNumber    String?
   logo              String?          // URL

@@ -18,12 +18,13 @@ import {
   MessageSquare, 
   AlertCircle, 
   CheckCircle,
-  Navigation
+  Navigation,
+  Hash
 } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<'user' | 'owner'>('user');
   
   // General details
@@ -35,6 +36,8 @@ export default function RegisterPage() {
   // Owner/Pharmacy details
   const [shopName, setShopName] = useState('');
   const [address, setAddress] = useState('');
+  const [pincode, setPincode] = useState('');
+  const [district, setDistrict] = useState('');
   const [licenseNumber, setLicenseNumber] = useState('');
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [emergencySupport, setEmergencySupport] = useState(false);
@@ -110,8 +113,8 @@ export default function RegisterPage() {
         }
       } else {
         // Owner Registration
-        if (!shopName || !address || !licenseNumber) {
-          setError('Please fill in all required shop details');
+        if (!shopName || !address || !licenseNumber || !district || !pincode) {
+          setError(language === 'ml' ? 'ഷോപ്പ് വിലാസം, ജില്ല, പിൻകോഡ്, ലൈസൻസ് നമ്പർ എന്നിവ നിർബന്ധമാണ്' : 'Please fill in all required fields including district and pincode');
           setIsLoading(false);
           return;
         }
@@ -132,6 +135,8 @@ export default function RegisterPage() {
           password,
           shopName,
           address,
+          pincode,
+          district,
           licenseNumber,
           contactNumber: phone,
           whatsappNumber: whatsappNumber || null,
@@ -167,8 +172,9 @@ export default function RegisterPage() {
         
         {/* Header */}
         <div className="flex flex-col items-center text-center gap-2.5 mb-8">
-          <Link href="/" className="w-11 h-11 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-lg">
-            <HeartPulse className="w-5.5 h-5.5 animate-pulse" />
+          <Link href="/" className="w-16 h-16 rounded-2xl overflow-hidden shadow-lg bg-white flex items-center justify-center border border-slate-100 p-1 hover:scale-105 transition-transform duration-200">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo.png" alt="Marunnundo Logo" className="w-full h-full object-contain" />
           </Link>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight mt-1.5">
             {t('register_title')}
@@ -206,8 +212,8 @@ export default function RegisterPage() {
           </button>
         </div>
 
-        {/* Registration form */}
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+        {/* Registration form – single column on mobile, 2-col on md+ */}
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start">
           
           {/* LEFT SECTION: AUTH / OWNER INFO */}
           <div className="flex flex-col gap-5">
@@ -346,8 +352,65 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* License Number & WhatsApp */}
-            <div className="grid grid-cols-2 gap-4">
+            {/* District Dropdown */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('district_label')} <span className="text-red-500">*</span></label>
+              <div className="relative">
+                <select
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  required={activeTab === 'owner'}
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 appearance-none cursor-pointer text-slate-700"
+                >
+                  <option value="">{t('choose_district')}</option>
+                  {([
+                    { en: 'Kasaragod',        ml: 'കാസർഗോഡ്' },
+                    { en: 'Kannur',           ml: 'കണ്ണൂർ' },
+                    { en: 'Wayanad',          ml: 'വയനാട്' },
+                    { en: 'Kozhikode',        ml: 'കോഴിക്കോട്' },
+                    { en: 'Malappuram',       ml: 'മലപ്പുറം' },
+                    { en: 'Palakkad',         ml: 'പാലക്കാട്' },
+                    { en: 'Thrissur',         ml: 'തൃശ്ശൂർ' },
+                    { en: 'Ernakulam',        ml: 'എറണാകുളം' },
+                    { en: 'Idukki',           ml: 'ഇടുക്കി' },
+                    { en: 'Kottayam',         ml: 'കോട്ടയം' },
+                    { en: 'Alappuzha',        ml: 'ആലപ്പുഴ' },
+                    { en: 'Pathanamthitta',   ml: 'പത്തനംതിട്ട' },
+                    { en: 'Kollam',           ml: 'കൊല്ലം' },
+                    { en: 'Thiruvananthapuram', ml: 'തിരുവനന്തപുരം' },
+                  ] as const).map((d) => (
+                    <option key={d.en} value={d.en}>
+                      {language === 'ml' ? `${d.ml} (${d.en})` : d.en}
+                    </option>
+                  ))}
+                </select>
+                <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3 pointer-events-none" />
+                <svg className="w-4 h-4 text-slate-400 absolute right-3 top-3 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+              </div>
+            </div>
+
+            {/* Pincode */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('pincode_label')} <span className="text-red-500">*</span></label>
+              <div className="relative">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={6}
+                  placeholder={t('pincode_placeholder')}
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                  required={activeTab === 'owner'}
+                  disabled={activeTab === 'user'}
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 tracking-widest font-mono"
+                />
+                <Hash className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              </div>
+              <p className="text-[10px] text-slate-400">{t('pincode_hint')}</p>
+            </div>
+
+            {/* License Number & WhatsApp – stack on mobile */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{t('license_label')} *</label>
                 <div className="relative">
@@ -380,8 +443,8 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            {/* Toggle badges */}
-            <div className="grid grid-cols-2 gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
+            {/* Toggle badges – stack on mobile */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
               <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
                 <input
                   type="checkbox"

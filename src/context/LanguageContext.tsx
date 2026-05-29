@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { translations, TranslationKey } from '@/lib/translations';
+import LogoLoader from '@/components/LogoLoader';
 
 type Language = 'en' | 'ml';
 
@@ -15,12 +16,17 @@ const LanguageContext = createContext<LanguageContextProps | undefined>(undefine
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguageState] = useState<Language>('ml');
+  // Controls the initial full-screen loader; true until localStorage is read
+  const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
     const savedLang = localStorage.getItem('language') as Language;
     if (savedLang === 'en' || savedLang === 'ml') {
       setLanguageState(savedLang);
     }
+    // Brief intentional delay so the pop animation plays at least once
+    const t = setTimeout(() => setIsHydrated(true), 800);
+    return () => clearTimeout(t);
   }, []);
 
   const setLanguage = (lang: Language) => {
@@ -37,6 +43,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t }}>
+      {/* Full-screen initial loader — fades out once hydrated */}
+      {!isHydrated && <LogoLoader variant="fullscreen" />}
       {children}
     </LanguageContext.Provider>
   );
@@ -49,3 +57,4 @@ export function useLanguage() {
   }
   return context;
 }
+

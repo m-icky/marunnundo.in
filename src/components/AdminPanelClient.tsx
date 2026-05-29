@@ -136,7 +136,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8 animate-fade-in">
       
       {/* Admin Title Card */}
-      <section className="flex justify-between items-center bg-white p-6 rounded-3xl border border-slate-200 shadow-md">
+      <section className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 sm:p-6 rounded-3xl border border-slate-200 shadow-md">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center">
             <ShieldIcon className="w-6 h-6 animate-pulse text-emerald-400" />
