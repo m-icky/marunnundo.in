@@ -39,7 +39,7 @@ export async function getNearbyPharmacies(lat?: number, lng?: number, radiusKm: 
 
     if (!lat || !lng) {
       // If no location provided, return all verified pharmacies
-      return pharmacies.map((p) => ({
+      return pharmacies.map((p: any) => ({
         ...p,
         distance: null,
       }));
@@ -47,15 +47,15 @@ export async function getNearbyPharmacies(lat?: number, lng?: number, radiusKm: 
 
     // Filter and sort by distance using Haversine
     return pharmacies
-      .map((p) => {
+      .map((p: any) => {
         const distance = calculateDistance(lat, lng, p.latitude, p.longitude);
         return {
           ...p,
           distance: parseFloat(distance.toFixed(2)),
         };
       })
-      .filter((p) => p.distance <= radiusKm)
-      .sort((a, b) => a.distance - b.distance);
+      .filter((p: any) => p.distance <= radiusKm)
+      .sort((a: any, b: any) => a.distance - b.distance);
   } catch (error) {
     console.error('Error fetching nearby pharmacies:', error);
     return [];
@@ -145,7 +145,7 @@ export async function searchPharmacies(
     });
 
     // Map distances and sort
-    const results = pharmacies.map((p) => {
+    const results = pharmacies.map((p: any) => {
       const distance = lat && lng ? calculateDistance(lat, lng, p.latitude, p.longitude) : null;
       return {
         ...p,
@@ -154,7 +154,7 @@ export async function searchPharmacies(
     });
 
     if (lat && lng) {
-      return results.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+      return results.sort((a: any, b: any) => (a.distance || 0) - (b.distance || 0));
     }
 
     return results;
