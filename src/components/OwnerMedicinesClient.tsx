@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLanguage } from '@/context/LanguageContext';
 import { addMedicine, updateMedicine, deleteMedicine } from '@/app/actions/owner';
 import { 
   PlusCircle, 
@@ -40,6 +41,7 @@ interface Props {
 
 export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: Props) {
   const router = useRouter();
+  const { t, language } = useLanguage();
   const [medicines, setMedicines] = useState<Medicine[]>(initialMedicines);
   const [search, setSearch] = useState('');
   
@@ -115,6 +117,22 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
     setError('');
     setSuccess('');
     setIsLoading(true);
+
+    if (expiryDate) {
+      const selectedDate = new Date(expiryDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        setError(language === 'ml' 
+          ? 'കാലാവധി കഴിഞ്ഞ തീയതി നൽകാൻ സാധിക്കില്ല (Expiry date cannot be in the past).' 
+          : 'Expiry date cannot be in the past / already completed.'
+        );
+        setIsLoading(false);
+        return;
+      }
+    }
 
     const data = {
       name,
@@ -406,6 +424,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
                   <input
                     type="date"
                     value={expiryDate}
+                    min={new Date().toISOString().split('T')[0]}
                     onChange={(e) => setExpiryDate(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
                   />

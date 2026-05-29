@@ -16,10 +16,10 @@ const defaultIcon = L.icon({
 });
 
 const userLocationIcon = L.icon({
-  iconUrl: 'https://cdn-icons-png.flaticon.com/512/1782/1782894.png', // Pulsing/dot icon for user location
-  iconSize: [30, 30],
-  iconAnchor: [15, 15],
-  popupAnchor: [0, -15],
+  iconUrl: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png', // Premium user avatar icon for user location
+  iconSize: [32, 32],
+  iconAnchor: [16, 16],
+  popupAnchor: [0, -16],
 });
 
 const pharmacyIcon = L.icon({

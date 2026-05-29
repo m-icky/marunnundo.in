@@ -145,7 +145,16 @@ export async function addMedicine(pharmacyId: string, data: {
       return { success: false, error: 'Required medicine details are missing' };
     }
 
-    const expiry = data.expiryDate ? new Date(data.expiryDate) : null;
+    let expiry: Date | null = null;
+    if (data.expiryDate) {
+      expiry = new Date(data.expiryDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      expiry.setHours(0, 0, 0, 0);
+      if (expiry < today) {
+        return { success: false, error: 'Expiry date cannot be in the past' };
+      }
+    }
 
     const medicine = await db.medicine.create({
       data: {
@@ -187,7 +196,16 @@ export async function updateMedicine(pharmacyId: string, medicineId: string, dat
   try {
     await checkOwnerAuth(pharmacyId);
 
-    const expiry = data.expiryDate ? new Date(data.expiryDate) : null;
+    let expiry: Date | null = null;
+    if (data.expiryDate) {
+      expiry = new Date(data.expiryDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      expiry.setHours(0, 0, 0, 0);
+      if (expiry < today) {
+        return { success: false, error: 'Expiry date cannot be in the past' };
+      }
+    }
 
     const medicine = await db.medicine.update({
       where: { id: medicineId, pharmacyId },
