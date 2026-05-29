@@ -68,7 +68,7 @@ export const translations = {
     // Home Page - SEO Block
     seo_title: "മരുന്നുണ്ടോ.in - കേരളത്തിലെ ഫാർമസി & മെഡിസിൻ തിരച്ചിൽ ഡയറക്ടറി",
     seo_desc: "നിങ്ങളുടെ പ്രദേശത്തെ മെഡിക്കൽ സ്റ്റോറുകളിൽ മരുന്നുകൾ ലഭ്യമാണോ എന്ന് തൽസമയം പരിശോധിക്കാൻ സഹായിക്കുന്ന ഒരു ഓൺലൈൻ പ്ലാറ്റ്‌ഫോമാണ് മരുന്നുണ്ടോ (Marunnundo). കേരളത്തിലെ ഏത് ഭാഗത്തുമുള്ള ഫാർമസികൾ കണ്ടെത്താനും അവയുമായി ബന്ധപ്പെടാനും ഈ സംവിധാനം ഉപയോഗിക്കാം.",
-    seo_queries: "പതിവായി തിരയുന്ന വാക്കുകൾ: Marunnundo app, marunn undo kochi, marun indo medicine search, marun shop near me, മരുന്നുണ്ടോ മെഡിക്കൽ ഷോപ്പുകൾ.",
+    seo_queries: "Marunnundo.in കേരളത്തിലെ വിശ്വസനീയമായ ഫാർമസി കണ്ടെത്തൽ പ്ലാറ്റ്‌ഫോമാണ്. സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകളും ഫാർമസികളും കണ്ടെത്താനും, ആവശ്യമായ മരുന്നുകൾ തിരയാനും, അവയുടെ തത്സമയ സ്റ്റോക്ക് ലഭ്യത പരിശോധിക്കാനും, സമീപത്തെ ഫാർമസികളുടെ ഓപ്ഷനുകൾ താരതമ്യം ചെയ്യാനും, നാവിഗേഷൻ വഴി എളുപ്പത്തിൽ ലഭ്യമാക്കാനും ഇത് സഹായിക്കുന്നു. കൊച്ചി, തിരുവനന്തപുരം, കോഴിക്കോട് എന്നിവിടങ്ങളിലോ കേരളത്തിലെ മറ്റേതെങ്കിലും പ്രദേശങ്ങളിലോ നിങ്ങൾക്ക് ആവശ്യമായ മരുന്ന് കണ്ടെത്താൻ Marunnundo വേഗത്തിലും എളുപ്പത്തിലും സഹായിക്കും. \"എന്റെ സമീപത്തെ മരുന്ന് ലഭ്യത\", \"കേരള ഫാർമസി തിരയൽ\", \"കൊച്ചിയിലെ മെഡിക്കൽ ഷോപ്പുകൾ\", \"മരുന്നുണ്ടോ മെഡിക്കൽ ഷോപ്പുകൾ\" തുടങ്ങിയ തിരയലുകൾ നടത്തുന്നവർക്ക് ഏറ്റവും അനുയോജ്യമായ പ്ലാറ്റ്‌ഫോമാണ് Marunnundo.in.",
 
     // Pharmacy Details Page
     back_to_discovery: "ഷോപ്പുകളുടെ ലിസ്റ്റിലേക്ക് മടങ്ങുക",
@@ -160,7 +160,7 @@ export const translations = {
     login_here: "ഇവിടെ ലോഗിൻ ചെയ്യാം",
 
     // Merchant / Owner Panel Page
-    pharmacy_portal: "ഫാർമസി പോർട്ടൽ",
+    pharmacy_portal: "ഫാർമസി പാനൽ",
     welcome_back: "സ്വാഗതം,",
     merchant_desc: "സ്റ്റോക്ക് വിവരങ്ങൾ, ഉപഭോക്തൃ റിവ്യൂകൾ, പേജ് സന്ദർശനം എന്നിവ ഇവിടെ നിയന്ത്രിക്കാം.",
     add_medicine_btn: "മരുന്നുകൾ ചേർക്കുക",
@@ -301,7 +301,7 @@ export const translations = {
     // Home Page - SEO Block
     seo_title: "Marunnundo.in - Kerala Pharmacy & Medicine Search Directory",
     seo_desc: "Marunnundo is an online platform that helps you check in real-time if medicines are available in medical shops in your local area. This system can be used to find and contact pharmacies in any part of Kerala.",
-    seo_queries: "Frequently searched queries: Marunnundo app, marunn undo kochi, marun indo medicine search, marun shop near me, മരുന്നുണ്ടോ മെഡിക്കൽ ഷോപ്പുകൾ.",
+    seo_queries: "Marunnundo.in is Kerala's trusted pharmacy discovery platform that connects users with nearby medical stores and pharmacies. Search for medicines, check real-time stock availability, compare nearby pharmacy options, and get navigation directions instantly. Whether you're looking for a medicine in Kochi, Trivandrum, Calicut, or anywhere in Kerala, Marunnundo helps you find the right pharmacy quickly. Popular searches include medicine availability near me, pharmacy search Kerala, medical shops in Kochi, and മരുന്നുണ്ടോ മെഡിക്കൽ ഷോപ്പുകൾ.",
 
     // Pharmacy Details Page
     back_to_discovery: "Back to Discovery",

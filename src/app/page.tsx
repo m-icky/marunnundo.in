@@ -72,6 +72,7 @@ export default function HomePage() {
   const [locationStatus, setLocationStatus] = useState<'idle' | 'detecting' | 'success' | 'failed'>('idle');
   const [selectedPharmacyId, setSelectedPharmacyId] = useState<string | null>(null);
   const [selectedDistrictName, setSelectedDistrictName] = useState<string>('All Kerala');
+  const [recenterTrigger, setRecenterTrigger] = useState(0);
 
   // Fetch pharmacies based on coordinates and search filters
   const fetchPharmacies = useCallback(async () => {
@@ -98,6 +99,11 @@ export default function HomePage() {
 
   // Handle browser geolocation
   const detectLocation = () => {
+    // If location is already detected, immediately trigger recentering for instant map response
+    if (lat && lng) {
+      setRecenterTrigger(prev => prev + 1);
+    }
+
     if (!navigator.geolocation) {
       setLocationStatus('failed');
       alert('Browser geolocation is not supported by your browser');
@@ -111,6 +117,7 @@ export default function HomePage() {
         setLng(position.coords.longitude);
         setLocationStatus('success');
         setSelectedDistrictName('Your Current Location');
+        setRecenterTrigger(prev => prev + 1);
       },
       (error) => {
         console.error('Geolocation error:', error);
@@ -462,6 +469,7 @@ export default function HomePage() {
               centerLat={lat || 9.9723}
               centerLng={lng || 76.2801}
               zoom={lat && lng ? 14 : 11}
+              recenterTrigger={recenterTrigger}
             />
             {/* Floating Locate Me Button Overlay */}
             <button

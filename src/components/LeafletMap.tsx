@@ -53,10 +53,11 @@ interface MapProps {
   centerLat?: number;
   centerLng?: number;
   zoom?: number;
+  recenterTrigger?: number;
 }
 
 // 1. Controller component to auto-pan and zoom the map when center/markers change
-function MapController({ center, zoom, bounds }: { center?: [number, number]; zoom?: number; bounds?: L.LatLngBoundsExpression }) {
+function MapController({ center, zoom, bounds, recenterTrigger }: { center?: [number, number]; zoom?: number; bounds?: L.LatLngBoundsExpression; recenterTrigger?: number }) {
   const map = useMap();
   
   useEffect(() => {
@@ -65,7 +66,7 @@ function MapController({ center, zoom, bounds }: { center?: [number, number]; zo
     } else if (center) {
       map.setView(center, zoom || map.getZoom());
     }
-  }, [map, center, zoom, bounds]);
+  }, [map, center, zoom, bounds, recenterTrigger]);
   
   return null;
 }
@@ -121,6 +122,7 @@ export default function LeafletMap({
   centerLat = 9.9723, // Kochi MG Road default
   centerLng = 76.2801,
   zoom = 13,
+  recenterTrigger,
 }: MapProps) {
   const { language } = useLanguage();
   const [pickerCoords, setPickerCoords] = useState<[number, number] | null>(null);
@@ -146,7 +148,7 @@ export default function LeafletMap({
     } else if (mode === 'pick' && centerLat && centerLng) {
       setMapCenter([centerLat, centerLng]);
     }
-  }, [mode, userLat, userLng, centerLat, centerLng]);
+  }, [mode, userLat, userLng, centerLat, centerLng, recenterTrigger]);
 
   // Route drawing logic using free OSRM API
   useEffect(() => {
@@ -202,7 +204,7 @@ export default function LeafletMap({
       <MapContainer
         center={mapCenter}
         zoom={zoom}
-        style={{ width: '100%', height: '100%', minHeight: '300px' }}
+        style={{ width: '100%', height: '105%', minHeight: '300px' }}
         scrollWheelZoom={true}
       >
         <TileLayer
@@ -211,7 +213,7 @@ export default function LeafletMap({
         />
 
         {/* 1. Controller for panning/zooming dynamically */}
-        <MapController center={mapCenter} bounds={mapBounds} />
+        <MapController center={mapCenter} bounds={mapBounds} recenterTrigger={recenterTrigger} />
 
         {/* 2. Mode: COORDINATE PICKER */}
         {mode === 'pick' && (

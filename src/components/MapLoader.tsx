@@ -33,6 +33,7 @@ interface MapLoaderProps {
   centerLat?: number;
   centerLng?: number;
   zoom?: number;
+  recenterTrigger?: number;
 }
 
 export default function MapLoader(props: MapLoaderProps) {
