@@ -1,26 +1,108 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  
+  --primary: #059669; /* Emerald Green */
+  --primary-hover: #047857;
+  --secondary: #2563eb; /* Medical Blue */
+  --secondary-hover: #1d4ed8;
+  --accent: #0f766e; /* Soft Teal */
+  
+  --card: rgba(255, 255, 255, 0.85);
+  --card-border: rgba(255, 255, 255, 0.5);
+  
+  --radius: 1rem;
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(100% 100% at top left, #f0fdf4 0%, #f1f5f9 60%, #eff6ff 100%);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism Styles */
+.glass-card {
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.04);
+}
+
+.glass-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px 0 rgba(5, 150, 105, 0.08);
+  border-color: rgba(5, 150, 105, 0.2);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Leaflet Map Fixes */
+.leaflet-container {
+  font-family: inherit;
+  z-index: 10;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.08);
+  padding: 0.25rem;
+}
+
+.leaflet-bar {
+  border: none !important;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.08) !important;
+}
+
+.leaflet-bar a {
+  background-color: white !important;
+  color: #0f172a !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: #f8fafc !important;
+  color: #059669 !important;
+}
+
+/* Shimmer Loading Animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }

@@ -1,0 +1,120 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  OWNER
+  SUPERADMIN
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  name          String
+  phone         String?
+  role          Role           @default(USER)
+  pharmacies    Pharmacy[]     // For owners
+  reviews       Review[]       // Reviews submitted by users
+  notifications Notification[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([email])
+}
+
+model Pharmacy {
+  id                String           @id @default(uuid())
+  name              String
+  licenseNumber     String           @unique
+  address           String
+  contactNumber     String
+  whatsappNumber    String?
+  logo              String?          // URL
+  banner            String?          // URL
+  deliveryAvailable Boolean          @default(false)
+  deliveryRadius    Float            @default(5.0) // in KM
+  emergencySupport  Boolean          @default(false) // 24/7 or emergency support
+  latitude          Float
+  longitude         Float
+  rating            Float            @default(0.0)
+  isVerified        Boolean          @default(false)
+  isSuspended       Boolean          @default(false)
+  ownerId           String
+  owner             User             @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  medicines         Medicine[]
+  reviews           Review[]
+  operatingHours    OperatingHours[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([latitude, longitude])
+  @@index([isVerified, isSuspended])
+}
+
+model Medicine {
+  id                   String   @id @default(uuid())
+  name                 String
+  genericName          String
+  category             String   // e.g. "Antibiotics", "Cardiac", "Diabetic"
+  manufacturer         String?
+  batchNumber          String?
+  expiryDate           DateTime?
+  quantity             Int      @default(0)
+  price                Float
+  prescriptionRequired Boolean  @default(false)
+  isAvailable          Boolean  @default(true)
+  pharmacyId           String
+  pharmacy             Pharmacy @relation(fields: [pharmacyId], references: [id], onDelete: Cascade)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  @@index([pharmacyId])
+  @@index([name, genericName])
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  rating     Int      // 1 to 5
+  comment    String?
+  images     String[] // Array of image URLs
+  reply      String?  // Owner reply
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pharmacyId String
+  pharmacy   Pharmacy @relation(fields: [pharmacyId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([pharmacyId])
+  @@index([userId])
+}
+
+model OperatingHours {
+  id         String   @id @default(uuid())
+  day        String   // "Monday", "Tuesday", etc.
+  openTime   String   // e.g., "09:00"
+  closeTime  String   // e.g., "21:00"
+  isClosed   Boolean  @default(false)
+  pharmacyId String
+  pharmacy   Pharmacy @relation(fields: [pharmacyId], references: [id], onDelete: Cascade)
+
+  @@unique([pharmacyId, day])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId, read])
+}
