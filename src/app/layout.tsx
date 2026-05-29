@@ -4,6 +4,7 @@ import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { getSession } from '@/app/actions/auth';
+import { LanguageProvider } from '@/context/LanguageContext';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -13,7 +14,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://marunnundo.in'),
   title: {
-    default: 'മരുന്നുണ്ടോ.in — Marunnundo | Marun Undo | Nearby Medical Shops Kerala',
+    default: 'Marunnundo.in — Nearby Medical Shops Kerala',
     template: '%s | Marunnundo.in',
   },
   description: 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക. Check nearby medicine availability and driving routes in Kerala.',
@@ -92,11 +93,13 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col antialiased" suppressHydrationWarning>
-        <Header session={session} />
-        <main className="flex-1 flex flex-col">
-          {children}
-        </main>
-        <Footer />
+        <LanguageProvider>
+          <Header session={session} />
+          <main className="flex-1 flex flex-col">
+            {children}
+          </main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

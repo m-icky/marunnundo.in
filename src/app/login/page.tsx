@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { login } from '@/app/actions/auth';
-import { HeartPulse, Mail, Lock, AlertCircle, CheckCircle, ArrowRight } from 'lucide-react';
+import { HeartPulse, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import { useLanguage } from '@/context/LanguageContext';
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -30,7 +32,7 @@ export default function LoginPage() {
           window.location.href = '/';
         }
       } else {
-        setError(res.error || 'Invalid credentials');
+        setError(res.error || t('invalid_credentials'));
       }
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
@@ -56,10 +58,10 @@ export default function LoginPage() {
           </Link>
           <div className="flex flex-col mt-2">
             <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-              മടുത്തുണ്ടോ ലോഗിൻ (Login)
+              {t('login_title')}
             </h2>
-            <p className="text-slate-500 text-xs mt-1 font-semibold uppercase tracking-wider">
-              Access your personalized pharmacy panel
+            <p className="text-slate-500 text-xs mt-1 font-bold uppercase tracking-wider">
+              {t('login_subtitle')}
             </p>
           </div>
         </div>
@@ -70,7 +72,7 @@ export default function LoginPage() {
           {/* Email field */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">
-              ഇമെയിൽ വിലാസം (Email Address)
+              {t('email_label')}
             </label>
             <div className="relative">
               <input
@@ -88,7 +90,7 @@ export default function LoginPage() {
           {/* Password field */}
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">
-              രഹസ്യവാക്ക് (Password)
+              {t('password_label')}
             </label>
             <div className="relative">
               <input
@@ -104,7 +106,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-xs font-bold p-3.5 rounded-xl flex items-center gap-2">
+            <div className="bg-red-50 border border-red-200 text-red-700 text-xs font-bold p-3.5 rounded-xl flex items-center gap-2 animate-shake">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
             </div>
@@ -115,21 +117,21 @@ export default function LoginPage() {
             disabled={isLoading}
             className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-emerald-600/10 active:scale-98 cursor-pointer flex items-center justify-center gap-1.5"
           >
-            <span>{isLoading ? 'ലോഗിൻ ചെയ്യുന്നു...' : 'ലോഗിൻ ചെയ്യുക (Login)'}</span>
+            <span>{isLoading ? t('logging_in_btn') : t('login_btn')}</span>
             {!isLoading && <ArrowRight className="w-4 h-4" />}
           </button>
         </form>
 
         {/* Footer links */}
         <div className="mt-8 border-t border-slate-100 pt-6 text-center flex flex-col gap-2.5">
-          <p className="text-xs text-slate-500 font-semibold">
-            അക്കൗണ്ട് ഇല്ലേ? (Don&apos;t have an account?)
+          <p className="text-xs text-slate-500 font-bold">
+            {t('no_account_prompt')}
           </p>
           <Link
             href="/register"
             className="text-xs font-extrabold text-emerald-600 hover:text-emerald-700 hover:underline"
           >
-            ഇവിടെ രജിസ്റ്റർ ചെയ്യാം (Register Here)
+            {t('register_here')}
           </Link>
         </div>
 

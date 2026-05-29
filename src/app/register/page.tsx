@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { registerUser, registerOwner, resolveGoogleMapsUrl } from '@/app/actions/auth';
 import MapLoader from '@/components/MapLoader';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   HeartPulse, 
   User, 
@@ -15,15 +16,14 @@ import {
   MapPin, 
   FileText, 
   MessageSquare, 
-  Truck, 
   AlertCircle, 
   CheckCircle,
-  HelpCircle,
   Navigation
 } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'user' | 'owner'>('user');
   
   // General details
@@ -48,7 +48,7 @@ export default function RegisterPage() {
 
   const handleResolveGoogleMaps = async () => {
     if (!googleMapsUrl) {
-      setMapsError('Please enter a Google Maps link first.');
+      setMapsError(t('whatsapp_disabled') === 'WhatsApp ordering not enabled' ? 'Please enter a Google Maps link first.' : 'ദയവായി ഗൂഗിൾ മാപ്പ് ലിങ്ക് നൽകുക.');
       return;
     }
 
@@ -171,10 +171,10 @@ export default function RegisterPage() {
             <HeartPulse className="w-5.5 h-5.5 animate-pulse" />
           </Link>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-800 tracking-tight mt-1.5">
-            പുതിയ അക്കൗണ്ട് രജിസ്റ്റർ ചെയ്യാം
+            {t('register_title')}
           </h2>
-          <p className="text-slate-500 text-xs font-semibold uppercase tracking-wider">
-            Register new account on Marunnundo.in
+          <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+            {t('register_subtitle')}
           </p>
         </div>
 
@@ -190,7 +190,7 @@ export default function RegisterPage() {
             }`}
           >
             <User className="w-4 h-4" />
-            <span>രോഗി / ഉപയോക്താവ് (Patient)</span>
+            <span>{t('patient_tab')}</span>
           </button>
           <button
             type="button"
@@ -202,7 +202,7 @@ export default function RegisterPage() {
             }`}
           >
             <Store className="w-4 h-4" />
-            <span>ഫാർമസി ഉടമ (Pharmacy Owner)</span>
+            <span>{t('owner_tab')}</span>
           </button>
         </div>
 
@@ -213,12 +213,12 @@ export default function RegisterPage() {
           <div className="flex flex-col gap-5">
             <h3 className="text-sm font-extrabold text-slate-700 border-b border-slate-100 pb-2 flex items-center gap-1.5">
               <User className="w-4 h-4 text-emerald-600" />
-              വ്യക്തിഗത വിവരങ്ങൾ (Owner / User Profile)
+              {t('personal_info_section')}
             </h3>
 
             {/* Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">പേര് (Name) *</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('name_label')} *</label>
               <div className="relative">
                 <input
                   type="text"
@@ -234,7 +234,7 @@ export default function RegisterPage() {
 
             {/* Email */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">ഇമെയിൽ (Email) *</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('email_reg_label')} *</label>
               <div className="relative">
                 <input
                   type="email"
@@ -250,7 +250,7 @@ export default function RegisterPage() {
 
             {/* Phone */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">ഫോൺ നമ്പർ (Phone) *</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('phone_label')} *</label>
               <div className="relative">
                 <input
                   type="tel"
@@ -266,7 +266,7 @@ export default function RegisterPage() {
 
             {/* Password */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">രഹസ്യവാക്ക് (Password) *</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('password_reg_label')} *</label>
               <div className="relative">
                 <input
                   type="password"
@@ -281,7 +281,7 @@ export default function RegisterPage() {
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 text-xs font-bold p-3.5 rounded-xl flex items-center gap-2">
+              <div className="bg-red-50 border border-red-200 text-red-700 text-xs font-bold p-3.5 rounded-xl flex items-center gap-2 animate-shake">
                 <AlertCircle className="w-4 h-4 flex-shrink-0" />
                 <span>{error}</span>
               </div>
@@ -300,7 +300,7 @@ export default function RegisterPage() {
                 disabled={isLoading}
                 className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-3 rounded-xl transition-all shadow-md mt-3 active:scale-98 cursor-pointer text-sm"
               >
-                {isLoading ? 'രജിസ്റ്റർ ചെയ്യുന്നു...' : 'രജിസ്റ്റർ ചെയ്യാം (Register)'}
+                {isLoading ? t('registering_btn') : t('register_btn')}
               </button>
             )}
           </div>
@@ -309,12 +309,12 @@ export default function RegisterPage() {
           <div className={`flex flex-col gap-5 ${activeTab === 'user' ? 'hidden md:flex opacity-25 pointer-events-none select-none' : ''}`}>
             <h3 className="text-sm font-extrabold text-slate-700 border-b border-slate-100 pb-2 flex items-center gap-1.5">
               <Store className="w-4 h-4 text-emerald-600" />
-              മെഡിക്കൽ ഷോപ്പ് വിവരങ്ങൾ (Pharmacy Details)
+              {t('pharmacy_info_section')}
             </h3>
 
             {/* Shop Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">ഷോപ്പിന്റെ പേര് (Shop Name) *</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('shop_name_label')} *</label>
               <div className="relative">
                 <input
                   type="text"
@@ -323,7 +323,7 @@ export default function RegisterPage() {
                   onChange={(e) => setShopName(e.target.value)}
                   required={activeTab === 'owner'}
                   disabled={activeTab === 'user'}
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
                 <Store className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               </div>
@@ -331,7 +331,7 @@ export default function RegisterPage() {
 
             {/* Address */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">വിലാസം (Address) *</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('address_label')} *</label>
               <div className="relative">
                 <input
                   type="text"
@@ -340,7 +340,7 @@ export default function RegisterPage() {
                   onChange={(e) => setAddress(e.target.value)}
                   required={activeTab === 'owner'}
                   disabled={activeTab === 'user'}
-                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none"
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 />
                 <MapPin className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               </div>
@@ -349,23 +349,23 @@ export default function RegisterPage() {
             {/* License Number & WhatsApp */}
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-widest text-[10px]">ലൈസൻസ് നമ്പർ *</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{t('license_label')} *</label>
                 <div className="relative">
                   <input
-                    type="text"
-                    placeholder="e.g. DL-4321A"
-                    value={licenseNumber}
-                    onChange={(e) => setLicenseNumber(e.target.value)}
-                    required={activeTab === 'owner'}
-                    disabled={activeTab === 'user'}
-                    className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none"
+                     type="text"
+                     placeholder="e.g. DL-4321A"
+                     value={licenseNumber}
+                     onChange={(e) => setLicenseNumber(e.target.value)}
+                     required={activeTab === 'owner'}
+                     disabled={activeTab === 'user'}
+                     className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                   <FileText className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-3.5" />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold text-slate-600 uppercase tracking-widest text-[10px]">വാട്സ്ആപ്പ് നമ്പർ</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{t('whatsapp_reg_label')}</label>
                 <div className="relative">
                   <input
                     type="tel"
@@ -373,7 +373,7 @@ export default function RegisterPage() {
                     value={whatsappNumber}
                     onChange={(e) => setWhatsappNumber(e.target.value)}
                     disabled={activeTab === 'user'}
-                    className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none"
+                    className="w-full pl-8 pr-3 py-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                   />
                   <MessageSquare className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-3.5" />
                 </div>
@@ -388,9 +388,9 @@ export default function RegisterPage() {
                   checked={emergencySupport}
                   onChange={(e) => setEmergencySupport(e.target.checked)}
                   disabled={activeTab === 'user'}
-                  className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4"
+                  className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
                 />
-                <span>24/7 എമർജൻസി</span>
+                <span>{t('emergency_247_toggle')}</span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
@@ -399,15 +399,15 @@ export default function RegisterPage() {
                   checked={deliveryAvailable}
                   onChange={(e) => setDeliveryAvailable(e.target.checked)}
                   disabled={activeTab === 'user'}
-                  className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4"
+                  className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
                 />
-                <span>ഹോം ഡെലിവറി</span>
+                <span>{t('delivery_toggle')}</span>
               </label>
             </div>
 
             {deliveryAvailable && (
               <div className="flex items-center gap-3 animate-in slide-in-from-top-2 duration-150">
-                <label className="text-xs font-bold text-slate-600 min-w-[120px]">ഡെലിവറി പരിധി (KM):</label>
+                <label className="text-xs font-bold text-slate-600 min-w-[120px]">{t('delivery_radius_label')}:</label>
                 <input
                   type="number"
                   min="1"
@@ -424,7 +424,7 @@ export default function RegisterPage() {
             <div className="flex flex-col gap-2.5 bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100/50">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-1.5">
                 <Navigation className="w-4 h-4 text-emerald-600" />
-                ഗൂഗിൾ മാപ്പ് ലിങ്ക് (Google Maps Link) *
+                {t('google_maps_link_label')} *
               </label>
               
               <div className="flex gap-2">
@@ -446,7 +446,7 @@ export default function RegisterPage() {
                   disabled={isResolvingMaps || activeTab === 'user'}
                   className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md shadow-emerald-600/10 cursor-pointer whitespace-nowrap"
                 >
-                  {isResolvingMaps ? 'പരിശോധിക്കുന്നു...' : 'ലിങ്ക് വെരിഫൈ ചെയ്യുക'}
+                  {isResolvingMaps ? t('verifying_link_btn') : t('verify_link_btn')}
                 </button>
               </div>
 
@@ -456,15 +456,15 @@ export default function RegisterPage() {
                 </p>
               )}
               
-              <p className="text-[10px] text-slate-400 leading-relaxed">
-                *നിങ്ങളുടെ ഫാർമസിയുടെ ഗൂഗിൾ മാപ്പ് ലിങ്ക് കോപ്പി പേസ്റ്റ് ചെയ്ത് "ലിങ്ക് വെരിഫൈ ചെയ്യുക" ബട്ടൺ ക്ലിക്ക് ചെയ്യുക. ലൊക്കേഷൻ ഭൂപടത്തിൽ തനിയെ അടയാളപ്പെടുത്തുന്നതാണ്.
+              <p className="text-[10px] text-slate-400 leading-relaxed font-semibold">
+                *{t('maps_link_notice')}
               </p>
             </div>
 
             {/* MAP COORDINATES PREVIEW */}
             <div className="flex flex-col gap-2 mt-1">
               <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">
-                ലൊക്കേഷൻ പ്രിവ്യൂ (Location Preview)
+                {t('location_preview_label')}
               </label>
               
               <div className="grid grid-cols-2 gap-2 text-xs font-bold">
@@ -490,8 +490,8 @@ export default function RegisterPage() {
                   }}
                 />
               </div>
-              <p className="text-[10px] text-slate-400 text-center leading-relaxed">
-                *ഭൂപടത്തിൽ മാർക്കർ ഡ്രാഗ് ചെയ്ത് ലൊക്കേഷൻ കൂടുതൽ കൃത്യമാക്കാവുന്നതാണ്.
+              <p className="text-[10px] text-slate-400 text-center leading-relaxed font-semibold">
+                *{t('marker_drag_notice')}
               </p>
             </div>
 
@@ -501,7 +501,7 @@ export default function RegisterPage() {
                 disabled={isLoading}
                 className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-98 cursor-pointer text-sm"
               >
-                {isLoading ? 'ഷോപ്പ് രജിസ്റ്റർ ചെയ്യുന്നു...' : 'ഫാർമസി രജിസ്റ്റർ ചെയ്യാം (Register Pharmacy)'}
+                {isLoading ? t('registering_shop_btn') : t('register_shop_btn')}
               </button>
             )}
           </div>
@@ -510,14 +510,14 @@ export default function RegisterPage() {
 
         {/* Footer links */}
         <div className="mt-8 border-t border-slate-100 pt-6 text-center flex flex-col gap-2.5">
-          <p className="text-xs text-slate-500 font-semibold">
-            ഇതിനകം അക്കൗണ്ട് ഉണ്ടോ? (Already have an account?)
+          <p className="text-xs text-slate-500 font-bold">
+            {t('already_have_account')}
           </p>
           <Link
             href="/login"
             className="text-xs font-extrabold text-emerald-600 hover:text-emerald-700 hover:underline"
           >
-            ഇവിടെ ലോഗിൻ ചെയ്യാം (Login Here)
+            {t('login_here')}
           </Link>
         </div>
 

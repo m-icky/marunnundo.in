@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { getNearbyPharmacies, searchPharmacies } from '@/app/actions/public';
 import MapLoader from '@/components/MapLoader';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   MapPin, 
   Search, 
@@ -12,7 +13,6 @@ import {
   AlertCircle, 
   Star, 
   HeartPulse, 
-  Phone,
   Layers,
   ChevronRight,
   Clock,
@@ -51,6 +51,7 @@ const DISTRICT_PRESETS = [
 ];
 
 export default function HomePage() {
+  const { t, language } = useLanguage();
   const [query, setQuery] = useState('');
   const [searchType, setSearchType] = useState<'all' | 'shop' | 'medicine'>('all');
   const [lat, setLat] = useState<number | undefined>(undefined);
@@ -124,6 +125,32 @@ export default function HomePage() {
     return hour >= 8 && hour < 22; // 8 AM to 10 PM
   };
 
+  // Translate preset label dynamically
+  const getPresetLabel = (presetName: string, defaultLabel: string) => {
+    if (language === 'en') {
+      if (presetName.includes('Kochi')) return 'Kochi';
+      if (presetName.includes('Trivandrum')) return 'Trivandrum';
+      if (presetName.includes('Kozhikode')) return 'Kozhikode';
+      if (presetName.includes('Thrissur')) return 'Thrissur';
+    }
+    return defaultLabel;
+  };
+
+  // Translate district name for display
+  const getDisplayDistrictName = () => {
+    if (selectedDistrictName === 'All Kerala') return t('all_kerala');
+    if (selectedDistrictName === 'Your Current Location') return t('your_current_location');
+    if (language === 'en') {
+      return selectedDistrictName;
+    } else {
+      if (selectedDistrictName.includes('Kochi')) return 'കൊച്ചി';
+      if (selectedDistrictName.includes('Trivandrum')) return 'തിരുവനന്തപുരം';
+      if (selectedDistrictName.includes('Kozhikode')) return 'കോഴിക്കോട്';
+      if (selectedDistrictName.includes('Thrissur')) return 'തൃശ്ശൂർ';
+    }
+    return selectedDistrictName;
+  };
+
   return (
     <div className="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 gap-6">
       {/* Search Engine Optimization JSON-LD Local Business & Site Schema */}
@@ -154,16 +181,16 @@ export default function HomePage() {
         <div className="flex-1 flex flex-col gap-4 text-center md:text-left">
           <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200 self-center md:self-start shadow-sm">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>കേരളത്തിൽ ഉടനീളം ലഭ്യമാണ് (Live in Kerala)</span>
+            <span>{t('live_in_kerala')}</span>
           </div>
           <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight leading-tight">
-            മരുന്നുണ്ടോ<span className="text-emerald-600">?</span>
+            {t('hero_title')}
           </h1>
           <p className="text-base sm:text-lg text-slate-600 max-w-xl font-medium">
-            സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്തുക, മരുന്ന് ലഭ്യത പരിശോധിക്കുക, ഭൂപടത്തിലൂടെ കൃത്യമായി നാവിഗേറ്റ് ചെയ്യുക.
+            {t('hero_subtitle')}
           </p>
           <div className="text-xs text-slate-500 font-semibold uppercase tracking-wider">
-            Find nearby pharmacies • Verify stock availability • Live routes
+            {t('hero_bullets')}
           </div>
         </div>
 
@@ -180,15 +207,15 @@ export default function HomePage() {
             <Navigation className={`w-5 h-5 ${locationStatus === 'detecting' ? 'animate-spin' : ''}`} />
             <span>
               {locationStatus === 'detecting'
-                ? 'ലൊക്കേഷൻ കണ്ടെത്തുന്നു...'
-                : 'സമീപത്തെ ഷോപ്പുകൾ കാണാം (Detect Location)'}
+                ? t('detecting_location')
+                : t('detect_location')}
             </span>
           </button>
 
           {/* Quick city selection dropdown/tabs */}
           <div className="flex flex-col gap-1.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center md:text-left">
-              പ്രധാന നഗരങ്ങൾ (Quick Cities)
+              {t('quick_cities')}
             </span>
             <div className="grid grid-cols-2 gap-1.5">
               {DISTRICT_PRESETS.map((preset) => (
@@ -201,7 +228,7 @@ export default function HomePage() {
                       : 'bg-white text-slate-600 border-slate-200 hover:border-emerald-300 hover:text-emerald-700'
                   }`}
                 >
-                  {preset.label}
+                  {getPresetLabel(preset.name, preset.label)}
                 </button>
               ))}
             </div>
@@ -219,7 +246,7 @@ export default function HomePage() {
           <div className="glass-card rounded-2xl p-5 border border-slate-200/80 shadow-md">
             <h3 className="text-base font-bold text-slate-800 mb-3 flex items-center gap-1.5">
               <HeartPulse className="w-5 h-5 text-emerald-600" />
-              മരുന്ന് തിരയൂ / ഷോപ്പ് തിരയൂ (Search Platform)
+              {t('search_platform')}
             </h3>
             
             {/* Search Type Filter Tabs */}
@@ -232,7 +259,7 @@ export default function HomePage() {
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
-                എല്ലാം (Search All)
+                {t('search_all')}
               </button>
               <button
                 onClick={() => setSearchType('shop')}
@@ -242,7 +269,7 @@ export default function HomePage() {
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
-                മെഡിക്കൽ ഷോപ്പുകൾ (Pharmacies Only)
+                {t('pharmacies_only')}
               </button>
               <button
                 onClick={() => setSearchType('medicine')}
@@ -252,7 +279,7 @@ export default function HomePage() {
                     : 'text-slate-500 hover:text-slate-800'
                 }`}
               >
-                മരുന്നുകൾ (Medicines Only)
+                {t('medicines_only')}
               </button>
             </div>
 
@@ -261,7 +288,7 @@ export default function HomePage() {
               <div className="relative flex-1">
                 <input
                   type="text"
-                  placeholder="മരുന്നിന്റെ പേര്, ബ്രാൻഡ് അല്ലെങ്കിൽ ഷോപ്പ് ടൈപ്പ് ചെയ്യുക..."
+                  placeholder={t('search_placeholder')}
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 text-sm placeholder:text-slate-400 bg-white"
@@ -272,7 +299,7 @@ export default function HomePage() {
                 onClick={fetchPharmacies}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-xl text-sm transition-all shadow-md active:scale-95 cursor-pointer"
               >
-                തിരയൂ (Search)
+                {t('search_btn')}
               </button>
             </div>
           </div>
@@ -281,14 +308,14 @@ export default function HomePage() {
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight flex items-center gap-2">
-                സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ
+                {t('nearby_pharmacies')}
                 <span className="text-xs font-semibold px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded-full border border-emerald-200">
-                  {pharmacies.length} Available
+                  {pharmacies.length} {t('available_badge')}
                 </span>
               </h2>
               {lat && lng && (
                 <span className="text-xs text-slate-500 font-medium">
-                  Showing distance from center
+                  {t('distance_center')}
                 </span>
               )}
             </div>
@@ -310,15 +337,15 @@ export default function HomePage() {
             ) : pharmacies.length === 0 ? (
               <div className="glass-card rounded-2xl p-8 border border-slate-200 text-center flex flex-col items-center gap-3">
                 <AlertCircle className="w-12 h-12 text-slate-400" />
-                <h4 className="font-bold text-slate-800">മെഡിക്കൽ ഷോപ്പുകൾ ഒന്നും കണ്ടെത്തിയില്ല</h4>
+                <h4 className="font-bold text-slate-800">{t('no_pharmacies_found')}</h4>
                 <p className="text-slate-500 text-sm max-w-sm">
-                  We could not find any pharmacies matching your query or location within the search radius. Try resetting filters or changing coordinates.
+                  {t('no_pharmacies_desc')}
                 </p>
                 <button
                   onClick={() => { setQuery(''); setLat(undefined); setLng(undefined); setSelectedDistrictName('All Kerala'); }}
                   className="mt-2 text-xs font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-3 py-2 rounded-lg border border-emerald-100 cursor-pointer"
                 >
-                  തിരച്ചിൽ റീസെറ്റ് ചെയ്യുക (Reset)
+                  {t('reset_search')}
                 </button>
               </div>
             ) : (
@@ -350,7 +377,7 @@ export default function HomePage() {
                           isOpen ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'
                         }`}>
                           <Clock className="w-2.5 h-2.5" />
-                          {isOpen ? 'OPEN' : 'CLOSED'}
+                          {isOpen ? t('open_now') : t('closed_now')}
                         </span>
                       </div>
 
@@ -374,10 +401,10 @@ export default function HomePage() {
                           <div className="flex flex-wrap items-center gap-3 mt-1.5 text-xs text-slate-600 font-medium">
                             <span className="flex items-center gap-0.5 font-bold text-amber-600">
                               <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                              {pharmacy.rating > 0 ? pharmacy.rating.toFixed(1) : 'New'} ({pharmacy._count.reviews} reviews)
+                              {pharmacy.rating > 0 ? pharmacy.rating.toFixed(1) : t('new_badge')} ({pharmacy._count.reviews} {t('reviews_count')})
                             </span>
                             <span className="text-slate-300">•</span>
-                            <span className="text-slate-500">Inventory: {pharmacy._count.medicines} types</span>
+                            <span className="text-slate-500">{t('inventory_types')}: {pharmacy._count.medicines}</span>
                           </div>
                         </div>
 
@@ -387,13 +414,13 @@ export default function HomePage() {
                             {pharmacy.deliveryAvailable && (
                               <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded flex items-center gap-1">
                                 <Truck className="w-3 h-3" />
-                                Delivery
+                                {t('delivery_badge')}
                               </span>
                             )}
                             {pharmacy.emergencySupport && (
                               <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded flex items-center gap-1">
                                 <AlertCircle className="w-3 h-3" />
-                                24/7 Support
+                                {t('emergency_support_badge')}
                               </span>
                             )}
                           </div>
@@ -402,7 +429,7 @@ export default function HomePage() {
                             href={`/pharmacy/${pharmacy.id}`}
                             className="text-xs font-bold bg-slate-900 text-white hover:bg-emerald-600 px-3.5 py-1.5 rounded-xl shadow-md transition-all flex items-center gap-1 hover:gap-1.5 active:scale-98"
                           >
-                            <span>വഴി കാണിക്കുക (Route)</span>
+                            <span>{t('route_cta')}</span>
                             <ChevronRight className="w-3.5 h-3.5" />
                           </Link>
                         </div>
@@ -420,11 +447,11 @@ export default function HomePage() {
           <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center justify-between z-20">
             <span className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
               <Layers className="w-4 h-4 text-emerald-600" />
-              മാപ്പ് കാഴ്ച (Interactive Live Map)
+              {t('interactive_live_map')}
             </span>
             {lat && lng && (
               <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">
-                Active Coordinate Pin
+                {t('active_coordinate_pin')}
               </span>
             )}
           </div>
@@ -450,15 +477,13 @@ export default function HomePage() {
         <div className="glass-card rounded-2xl p-6 border border-slate-100 bg-slate-50/50 shadow-sm">
           <h2 className="text-sm font-extrabold text-slate-700 mb-2.5 flex items-center gap-1.5">
             <Sparkles className="w-4 h-4 text-emerald-600" />
-            മരുന്നുണ്ടോ.in - Kerala Pharmacy & Medicine Search Directory
+            {t('seo_title')}
           </h2>
           <p className="text-xs text-slate-500 leading-relaxed font-medium">
-            നിങ്ങളുടെ പ്രദേശത്തെ മെഡിക്കൽ സ്റ്റോറുകളിൽ മരുന്നുകൾ ലഭ്യമാണോ എന്ന് തൽസമയം പരിശോധിക്കാൻ സഹായിക്കുന്ന ഒരു ഓൺലൈൻ പ്ലാറ്റ്‌ഫോമാണ് <strong>മരുന്നുണ്ടോ (Marunnundo)</strong>. 
-            പലരും ഗൂഗിളിൽ <strong>marunnundo.in</strong>, <strong>marunn undo</strong>, <strong>marun indo</strong>, <strong>marun</strong>, അല്ലെങ്കിൽ <strong>marunundo</strong> എന്ന് ടൈപ്പ് ചെയ്തും ഞങ്ങളുടെ വെബ്സൈറ്റിൽ എത്താറുണ്ട്. 
-            കേരളത്തിലെ ഏത് ഭാഗത്തുമുള്ള ഫാർമസികൾ കണ്ടെത്താനും അവയുമായി ബന്ധപ്പെടാനും ഈ സംവിധാനം ഉപയോഗിക്കാം.
+            {t('seo_desc')}
           </p>
           <p className="text-[10px] text-slate-400 mt-2 font-medium">
-            Frequently searched queries: Marunnundo app, marunn undo kochi, marun indo medicine search, marun shop near me, മരുന്നുണ്ടോ മെഡിക്കൽ ഷോപ്പുകൾ.
+            {t('seo_queries')}
           </p>
         </div>
       </section>
