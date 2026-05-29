@@ -445,6 +445,24 @@ export default function HomePage() {
 
       </div>
 
+      {/* 3. SEO INFORMATIONAL FOOTER BLOCK FOR PHONETIC SEARCH & TYPOS */}
+      <section className="mt-8 border-t border-slate-100 pt-8 pb-4">
+        <div className="glass-card rounded-2xl p-6 border border-slate-100 bg-slate-50/50 shadow-sm">
+          <h2 className="text-sm font-extrabold text-slate-700 mb-2.5 flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-emerald-600" />
+            മരുന്നുണ്ടോ.in - Kerala Pharmacy & Medicine Search Directory
+          </h2>
+          <p className="text-xs text-slate-500 leading-relaxed font-medium">
+            നിങ്ങളുടെ പ്രദേശത്തെ മെഡിക്കൽ സ്റ്റോറുകളിൽ മരുന്നുകൾ ലഭ്യമാണോ എന്ന് തൽസമയം പരിശോധിക്കാൻ സഹായിക്കുന്ന ഒരു ഓൺലൈൻ പ്ലാറ്റ്‌ഫോമാണ് <strong>മരുന്നുണ്ടോ (Marunnundo)</strong>. 
+            പലരും ഗൂഗിളിൽ <strong>marunnundo.in</strong>, <strong>marunn undo</strong>, <strong>marun indo</strong>, <strong>marun</strong>, അല്ലെങ്കിൽ <strong>marunundo</strong> എന്ന് ടൈപ്പ് ചെയ്തും ഞങ്ങളുടെ വെബ്സൈറ്റിൽ എത്താറുണ്ട്. 
+            കേരളത്തിലെ ഏത് ഭാഗത്തുമുള്ള ഫാർമസികൾ കണ്ടെത്താനും അവയുമായി ബന്ധപ്പെടാനും ഈ സംവിധാനം ഉപയോഗിക്കാം.
+          </p>
+          <p className="text-[10px] text-slate-400 mt-2 font-medium">
+            Frequently searched queries: Marunnundo app, marunn undo kochi, marun indo medicine search, marun shop near me, മരുന്നുണ്ടോ മെഡിക്കൽ ഷോപ്പുകൾ.
+          </p>
+        </div>
+      </section>
+
     </div>
   );
 }

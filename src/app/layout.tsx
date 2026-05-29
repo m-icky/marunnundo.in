@@ -13,7 +13,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://marunnundo.in'),
   title: {
-    default: 'മരുന്നുണ്ടോ.in — സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്താം',
+    default: 'മരുന്നുണ്ടോ.in — Marunnundo | Marun Undo | Nearby Medical Shops Kerala',
     template: '%s | Marunnundo.in',
   },
   description: 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക. Check nearby medicine availability and driving routes in Kerala.',
@@ -25,7 +25,13 @@ export const metadata: Metadata = {
     'medicine search Kerala',
     'മരുന്നുണ്ടോ',
     'marunnundo',
-    'marunnundo Kochi',
+    'marunn undo',
+    'marun indo',
+    'marun',
+    'marunundo',
+    'marunnundo kochi',
+    'marun undo kerala',
+    'marun shop near me',
     'online medicine availability Kerala',
     'pharmacies in Kozhikode',
     'pharmacies in Trivandrum',
