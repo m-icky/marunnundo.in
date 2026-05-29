@@ -56,8 +56,8 @@ export const metadata: Metadata = {
     locale: 'ml_IN',
     alternateLocale: 'en_US',
     url: 'https://marunnundo.in',
-    title: 'മരുന്നുണ്ടോ.in — സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്താം',
-    description: 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക. Check nearby medicine availability and driving routes in Kerala.',
+    title: 'Marunnundo.in — Find Nearby Medical Stores',
+    description: 'Discover nearby medical stores in Kerala, check real-time medicine availability, and get live navigation routes instantly. Find medicines near you with accurate store information and driving directions.',
     siteName: 'Marunnundo.in',
     images: [
       {
@@ -70,8 +70,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'മരുന്നുണ്ടോ.in — സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ കണ്ടെത്താം',
-    description: 'കേരളത്തിലെ സമീപത്തെ മെഡിക്കൽ ഷോപ്പുകൾ, അവയിലെ മരുന്ന് ലഭ്യത, ലൈവ് നാവിഗേഷൻ റൂട്ടുകൾ എന്നിവ തൽസമയം പരിശോധിക്കുക.',
+    title: 'Marunnundo.in — Find Nearby Medical Stores',
+    description: 'Discover nearby medical stores in Kerala, check real-time medicine availability, and get live navigation routes instantly. Find medicines near you with accurate store information and driving directions.',
     images: ['/logo.png'],
   },
   icons: {
