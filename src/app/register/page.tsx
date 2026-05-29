@@ -52,6 +52,7 @@ export default function RegisterPage() {
   const [googleMapsUrl, setGoogleMapsUrl] = useState('');
   const [isResolvingMaps, setIsResolvingMaps] = useState(false);
   const [mapsError, setMapsError] = useState('');
+  const [isMapsVerified, setIsMapsVerified] = useState(false);
 
   // Password validation checks
   const hasMinLength = password.length >= 6;
@@ -71,11 +72,13 @@ export default function RegisterPage() {
   const handleResolveGoogleMaps = async () => {
     if (!googleMapsUrl) {
       setMapsError(language === 'ml' ? 'ദയവായി ഗൂഗിൾ മാപ്പ് ലിങ്ക് നൽകുക.' : 'Please enter a Google Maps link first.');
+      setIsMapsVerified(false);
       return;
     }
 
     setMapsError('');
     setIsResolvingMaps(true);
+    setIsMapsVerified(false);
 
     try {
       // First try client-side extraction if it's a long URL
@@ -93,6 +96,7 @@ export default function RegisterPage() {
         setLatitude(match[1]);
         setLongitude(match[2]);
         setIsResolvingMaps(false);
+        setIsMapsVerified(true);
         return;
       }
 
@@ -101,11 +105,14 @@ export default function RegisterPage() {
       if (res.success && res.latitude && res.longitude) {
         setLatitude(res.latitude.toString());
         setLongitude(res.longitude.toString());
+        setIsMapsVerified(true);
       } else {
         setMapsError(res.error || 'Failed to extract coordinates from this link.');
+        setIsMapsVerified(false);
       }
     } catch (err: any) {
       setMapsError(err.message || 'Something went wrong while resolving the link.');
+      setIsMapsVerified(false);
     } finally {
       setIsResolvingMaps(false);
     }
@@ -625,6 +632,7 @@ export default function RegisterPage() {
                     onChange={(e) => {
                       setGoogleMapsUrl(e.target.value);
                       setMapsError('');
+                      setIsMapsVerified(false);
                     }}
                     required
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-white text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
@@ -634,15 +642,29 @@ export default function RegisterPage() {
                       type="button"
                       onClick={handleResolveGoogleMaps}
                       disabled={isResolvingMaps}
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md shadow-emerald-500/10 cursor-pointer whitespace-nowrap text-center"
+                      className={`flex-1 disabled:opacity-50 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md cursor-pointer whitespace-nowrap text-center ${
+                        isMapsVerified 
+                          ? 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-500/20' 
+                          : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/10'
+                      }`}
                     >
-                      {isResolvingMaps ? t('verifying_link_btn') : t('verify_link_btn')}
+                      {isResolvingMaps ? (
+                        t('verifying_link_btn')
+                      ) : isMapsVerified ? (
+                        <span className="flex items-center justify-center gap-1">
+                          <Check className="w-3.5 h-3.5 text-emerald-100 animate-in zoom-in-50 duration-200" />
+                          <span>{language === 'ml' ? 'വെരിഫൈഡ്' : 'Verified'}</span>
+                        </span>
+                      ) : (
+                        t('verify_link_btn')
+                      )}
                     </button>
                     <button
                       type="button"
                       onClick={() => {
                         setGoogleMapsUrl('');
                         setMapsError('');
+                        setIsMapsVerified(false);
                       }}
                       className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-500 font-extrabold text-xs transition-all active:scale-95 cursor-pointer whitespace-nowrap text-center"
                     >
