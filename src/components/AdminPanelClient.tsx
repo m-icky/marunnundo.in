@@ -217,35 +217,43 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
         </div>
 
         {/* Status filters */}
-        <div className="flex border border-slate-200 rounded-xl overflow-hidden bg-white text-xs font-bold self-start md:self-center">
+        <div className="flex flex-wrap gap-1.5 text-xs font-bold self-start md:self-center">
           <button
             onClick={() => setStatusFilter('all')}
-            className={`px-4 py-2.5 transition-all cursor-pointer ${
-              statusFilter === 'all' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'
+            className={`px-3 py-2 rounded-xl border transition-all cursor-pointer ${
+              statusFilter === 'all' 
+                ? 'bg-slate-900 text-white border-slate-900 shadow-sm' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
             }`}
           >
             {t('all_filter')} ({stats.totalPharmacies})
           </button>
           <button
             onClick={() => setStatusFilter('pending')}
-            className={`px-4 py-2.5 transition-all cursor-pointer ${
-              statusFilter === 'pending' ? 'bg-amber-50 text-amber-700' : 'text-slate-600 hover:bg-slate-50'
+            className={`px-3 py-2 rounded-xl border transition-all cursor-pointer ${
+              statusFilter === 'pending' 
+                ? 'bg-amber-500 text-white border-amber-500 shadow-sm shadow-amber-500/10' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
             }`}
           >
             {t('owner_pending')} ({stats.pendingPharmacies})
           </button>
           <button
             onClick={() => setStatusFilter('verified')}
-            className={`px-4 py-2.5 transition-all cursor-pointer ${
-              statusFilter === 'verified' ? 'bg-emerald-50 text-emerald-800' : 'text-slate-600 hover:bg-slate-50'
+            className={`px-3 py-2 rounded-xl border transition-all cursor-pointer ${
+              statusFilter === 'verified' 
+                ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm shadow-emerald-600/10' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
             }`}
           >
             {t('owner_verified')} ({stats.verifiedPharmacies})
           </button>
           <button
             onClick={() => setStatusFilter('suspended')}
-            className={`px-4 py-2.5 transition-all cursor-pointer ${
-              statusFilter === 'suspended' ? 'bg-red-50 text-red-700' : 'text-slate-600 hover:bg-slate-50'
+            className={`px-3 py-2 rounded-xl border transition-all cursor-pointer ${
+              statusFilter === 'suspended' 
+                ? 'bg-red-600 text-white border-red-600 shadow-sm shadow-red-600/10' 
+                : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'
             }`}
           >
             {t('admin_status_suspended')} ({stats.suspendedPharmacies})
@@ -330,7 +338,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
                 </div>
 
                 {/* 3. Administrative Action CTAs */}
-                <div className="flex flex-wrap lg:flex-col justify-start lg:justify-center gap-2.5 min-w-[150px] w-full lg:w-auto">
+                <div className="flex flex-col sm:flex-row lg:flex-col justify-start lg:justify-center gap-2 w-full lg:w-auto">
                   
                   {/* Verification click */}
                   {!pharmacy.isVerified && (

@@ -34,6 +34,8 @@ interface MapLoaderProps {
   centerLng?: number;
   zoom?: number;
   recenterTrigger?: number;
+  highlightSearchArea?: boolean;
+  selectedDistrictName?: string;
 }
 
 export default function MapLoader(props: MapLoaderProps) {

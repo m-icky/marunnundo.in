@@ -67,6 +67,8 @@ export default function HomePage() {
   const [searchType, setSearchType] = useState<'all' | 'shop' | 'medicine'>('all');
   const [lat, setLat] = useState<number | undefined>(undefined);
   const [lng, setLng] = useState<number | undefined>(undefined);
+  const [userRealLat, setUserRealLat] = useState<number | undefined>(undefined);
+  const [userRealLng, setUserRealLng] = useState<number | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [pharmacies, setPharmacies] = useState<PharmacyItem[]>([]);
   const [locationStatus, setLocationStatus] = useState<'idle' | 'detecting' | 'success' | 'failed'>('idle');
@@ -100,8 +102,12 @@ export default function HomePage() {
   // Handle browser geolocation
   const detectLocation = () => {
     // If location is already detected, immediately trigger recentering for instant map response
-    if (lat && lng) {
+    if (userRealLat && userRealLng) {
+      setLat(userRealLat);
+      setLng(userRealLng);
+      setSelectedDistrictName('Your Current Location');
       setRecenterTrigger(prev => prev + 1);
+      return;
     }
 
     if (!navigator.geolocation) {
@@ -113,8 +119,12 @@ export default function HomePage() {
     setLocationStatus('detecting');
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
+        const uLat = position.coords.latitude;
+        const uLng = position.coords.longitude;
+        setLat(uLat);
+        setLng(uLng);
+        setUserRealLat(uLat);
+        setUserRealLng(uLng);
         setLocationStatus('success');
         setSelectedDistrictName('Your Current Location');
         setRecenterTrigger(prev => prev + 1);
@@ -193,6 +203,13 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-10 w-48 h-48 bg-blue-100/40 rounded-full blur-3xl -z-10"></div>
         
         <div className="flex-1 flex flex-col gap-4 text-center md:text-left">
+          {/* Brand Logo & Title */}
+          <div className="flex items-center gap-2.5 self-center md:self-start mb-1 select-none">
+            <div className="w-35 h-35 rounded-xl bg-white shadow-md border border-slate-100 flex items-center justify-center p-1.5">
+              <img src="/logo.png" alt="Marunnundo Logo" className="w-full h-full object-contain" style={{scale: "1.5"}} />
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-200 self-center md:self-start shadow-sm">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{t('live_in_kerala')}</span>
@@ -345,7 +362,7 @@ export default function HomePage() {
                   {t('no_pharmacies_desc')}
                 </p>
                 <button
-                  onClick={() => { setQuery(''); setLat(undefined); setLng(undefined); setSelectedDistrictName('All Kerala'); }}
+                  onClick={() => { setQuery(''); setLat(undefined); setLng(undefined); setUserRealLat(undefined); setUserRealLng(undefined); setSelectedDistrictName('All Kerala'); }}
                   className="mt-2 text-xs font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-3 py-2 rounded-lg border border-emerald-100 cursor-pointer"
                 >
                   {t('reset_search')}
@@ -464,12 +481,14 @@ export default function HomePage() {
               pharmacies={pharmacies}
               selectedPharmacyId={selectedPharmacyId}
               onSelectPharmacy={(id) => setSelectedPharmacyId(id)}
-              userLat={lat}
-              userLng={lng}
+              userLat={userRealLat}
+              userLng={userRealLng}
               centerLat={lat || 9.9723}
               centerLng={lng || 76.2801}
               zoom={lat && lng ? 14 : 11}
               recenterTrigger={recenterTrigger}
+              highlightSearchArea={lat !== undefined && lng !== undefined}
+              selectedDistrictName={selectedDistrictName}
             />
             {/* Floating Locate Me Button Overlay */}
             <button

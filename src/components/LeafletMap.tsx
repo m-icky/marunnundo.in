@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline, Circle, GeoJSON, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import { useLanguage } from '@/context/LanguageContext';
 
@@ -88,6 +88,8 @@ interface MapProps {
   centerLng?: number;
   zoom?: number;
   recenterTrigger?: number;
+  highlightSearchArea?: boolean;
+  selectedDistrictName?: string;
 }
 
 // 1. Controller component to auto-pan and zoom the map when center/markers change
@@ -157,12 +159,75 @@ export default function LeafletMap({
   centerLng = 76.2801,
   zoom = 13,
   recenterTrigger,
+  highlightSearchArea = false,
+  selectedDistrictName,
 }: MapProps) {
   const { language } = useLanguage();
   const [pickerCoords, setPickerCoords] = useState<[number, number] | null>(null);
   const [routePolyline, setRoutePolyline] = useState<[number, number][]>([]);
   const [mapCenter, setMapCenter] = useState<[number, number]>([centerLat, centerLng]);
   const [mapBounds, setMapBounds] = useState<L.LatLngBoundsExpression | undefined>(undefined);
+  const [districtGeoJson, setDistrictGeoJson] = useState<any | null>(null);
+
+  // Helper to map UI district names to Nominatim query names
+  const getNominatimQueryName = (district: string): string | null => {
+    if (!district || district === 'All Kerala' || district === 'Your Current Location') return null;
+    if (district.includes('Kochi') || district.includes('Ernakulam')) return 'Ernakulam';
+    if (district.includes('Trivandrum')) return 'Thiruvananthapuram';
+    return district;
+  };
+
+  // Fetch district GeoJSON boundary when selectedDistrictName changes
+  useEffect(() => {
+    if (mode !== 'view' || !selectedDistrictName) {
+      setDistrictGeoJson(null);
+      return;
+    }
+
+    const queryName = getNominatimQueryName(selectedDistrictName);
+    if (!queryName) {
+      setDistrictGeoJson(null);
+      return;
+    }
+
+    let active = true;
+
+    // Immediately clear previous district boundary so it doesn't linger while the new one loads
+    setDistrictGeoJson(null);
+
+    const fetchDistrictBoundary = async () => {
+      try {
+        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(queryName)}+District,Kerala,India&format=geojson&polygon_geojson=1`;
+        const res = await fetch(url, {
+          headers: {
+            'User-Agent': 'MarunnundoApp/1.0 (study work)'
+          }
+        });
+        const data = await res.json();
+        
+        if (!active) return; // Prevent race conditions from rapid clicking
+
+        if (data && data.features && data.features.length > 0) {
+          // Find the feature with polygon or multipolygon geometry
+          const boundaryFeature = data.features.find((f: any) => f.geometry.type === 'Polygon' || f.geometry.type === 'MultiPolygon') || data.features[0];
+          setDistrictGeoJson(boundaryFeature);
+        } else {
+          setDistrictGeoJson(null);
+        }
+      } catch (error) {
+        console.error('Failed to fetch district boundary GeoJSON:', error);
+        if (active) {
+          setDistrictGeoJson(null);
+        }
+      }
+    };
+
+    fetchDistrictBoundary();
+
+    return () => {
+      active = false;
+    };
+  }, [mode, selectedDistrictName]);
 
   // Initialize picker coords if in picker mode and centerLat/centerLng provided
   useEffect(() => {
@@ -173,16 +238,10 @@ export default function LeafletMap({
 
   // Adjust center based on props
   useEffect(() => {
-    if (mode === 'view') {
-      if (userLat && userLng) {
-        setMapCenter([userLat, userLng]);
-      } else {
-        setMapCenter([centerLat, centerLng]);
-      }
-    } else if (mode === 'pick' && centerLat && centerLng) {
+    if ((mode === 'view' || mode === 'pick') && centerLat && centerLng) {
       setMapCenter([centerLat, centerLng]);
     }
-  }, [mode, userLat, userLng, centerLat, centerLng, recenterTrigger]);
+  }, [mode, centerLat, centerLng, recenterTrigger]);
 
   // Route drawing logic using free OSRM API
   useEffect(() => {
@@ -294,6 +353,38 @@ export default function LeafletMap({
         {/* 4. Mode: PHARMACY LIST VIEW */}
         {mode === 'view' && (
           <>
+            {/* Search area / district highlight circle */}
+            {highlightSearchArea && centerLat && centerLng && (
+              <Circle 
+                center={[centerLat, centerLng]}
+                radius={30000} // 30KM matching search radius
+                pathOptions={{
+                  color: '#10b981',
+                  fillColor: '#10b981',
+                  fillOpacity: 0.04, // elegant premium glowing fill
+                  weight: 2,
+                  dashArray: '8, 8',
+                  opacity: 0.45,
+                }}
+              />
+            )}
+
+            {/* District Boundary GeoJSON Polyline/Polygon Highlight */}
+            {districtGeoJson && (
+              <GeoJSON 
+                key={selectedDistrictName} // Force re-render layer when district changes
+                data={districtGeoJson}
+                style={{
+                  color: '#10b981',      // Emerald border
+                  weight: 3,             // Sturdy border lines
+                  opacity: 0.75,         // High visibility
+                  fillColor: '#10b981',  // Emerald overlay fill
+                  fillOpacity: 0.08,     // Extremely premium subtle shading
+                  dashArray: '5, 5',     // Modern dashed borders
+                }}
+              />
+            )}
+
             {/* User current location dot if active */}
             {userLat && userLng && (
               <>
