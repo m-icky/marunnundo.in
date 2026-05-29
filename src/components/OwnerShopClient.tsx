@@ -4,18 +4,17 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { updatePharmacy } from '@/app/actions/owner';
 import MapLoader from '@/components/MapLoader';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   Store, 
   MapPin, 
   Phone, 
   MessageSquare, 
-  Truck, 
   AlertCircle, 
   Clock, 
   Image as ImageIcon,
   Save, 
-  CheckCircle,
-  AlertTriangle
+  CheckCircle
 } from 'lucide-react';
 
 interface OperatingHours {
@@ -54,6 +53,7 @@ const PRESET_BANNERS = [
 
 export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
   const router = useRouter();
+  const { t } = useLanguage();
   
   // Detail States
   const [name, setName] = useState(pharmacy.name);
@@ -108,7 +108,9 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
       const lngNum = parseFloat(longitude);
 
       if (isNaN(latNum) || isNaN(lngNum)) {
-        setError('Please select valid decimal map coordinates.');
+        setError(t('whatsapp_disabled') === 'WhatsApp ordering not enabled' 
+          ? 'Please select valid decimal map coordinates.' 
+          : 'മാപ്പിൽ സാധുവായ ലൊക്കേഷൻ കോർഡിനേറ്റുകൾ തിരഞ്ഞെടുക്കുക.');
         setIsLoading(false);
         return;
       }
@@ -138,7 +140,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
         setSuccess(true);
         router.refresh();
       } else {
-        setError(res.error || 'Failed to update pharmacy details');
+        setError(res.error || t('owner_settings_saved_err'));
       }
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
@@ -148,7 +150,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8 max-w-4xl mx-auto w-full pb-12">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-8 max-w-4xl mx-auto w-full pb-12 animate-fade-in">
       
       {/* Header card */}
       <section className="flex justify-between items-center bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
@@ -157,9 +159,9 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
             <Store className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold text-slate-800">ഷോപ്പ് ക്രമീകരണങ്ങൾ (Settings)</h2>
-            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">
-              Edit pharmacy coordinates, delivery radius and operational hours
+            <h2 className="text-xl font-extrabold text-slate-800">{t('owner_nav_settings')}</h2>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+              {t('owner_settings_subtitle')}
             </p>
           </div>
         </div>
@@ -170,7 +172,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
           className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-all shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5"
         >
           <Save className="w-4 h-4" />
-          <span>{isLoading ? 'Saving...' : 'Save Settings'}</span>
+          <span>{isLoading ? t('owner_saving_settings_btn') : t('owner_save_settings_btn')}</span>
         </button>
       </section>
 
@@ -184,7 +186,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
       {success && (
         <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold p-4 rounded-xl flex items-center gap-2">
           <CheckCircle className="w-4 h-4 flex-shrink-0 text-emerald-600" />
-          <span>ക്രമീകരണങ്ങൾ വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തിരിക്കുന്നു! (Settings updated successfully!)</span>
+          <span>{t('owner_settings_saved')}</span>
         </div>
       )}
 
@@ -196,12 +198,12 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
           <div className="glass-card rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col gap-5 bg-white">
             <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-50 pb-2 flex items-center gap-1.5">
               <Store className="w-4 h-4 text-emerald-600" />
-              പ്രധാന വിവരങ്ങൾ (Shop Details)
+              {t('pharmacy_info_section')}
             </h3>
 
             {/* Shop Name */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">ഷോപ്പിന്റെ പേര് (Shop Name)</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('shop_name_label')}</label>
               <input
                 type="text"
                 value={name}
@@ -213,7 +215,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
 
             {/* Address */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">വിലാസം (Address)</label>
+              <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">{t('address_label')}</label>
               <textarea
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
@@ -225,7 +227,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
             {/* Contact & Whatsapp */}
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">ഫോൺ നമ്പർ</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{t('phone_label')}</label>
                 <div className="relative">
                   <input
                     type="tel"
@@ -239,7 +241,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">വാട്സ്ആപ്പ് നമ്പർ</label>
+                <label className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">{t('whatsapp_reg_label')}</label>
                 <div className="relative">
                   <input
                     type="tel"
@@ -261,7 +263,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
                   onChange={(e) => setEmergencySupport(e.target.checked)}
                   className="rounded text-emerald-600 w-4 h-4 focus:ring-0"
                 />
-                <span>24/7 എമർജൻസി</span>
+                <span>{t('emergency_247_toggle')}</span>
               </label>
 
               <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-slate-700">
@@ -271,13 +273,13 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
                   onChange={(e) => setDeliveryAvailable(e.target.checked)}
                   className="rounded text-emerald-600 w-4 h-4 focus:ring-0"
                 />
-                <span>ഹോം ഡെലിവറി</span>
+                <span>{t('delivery_toggle')}</span>
               </label>
             </div>
 
             {deliveryAvailable && (
               <div className="flex items-center gap-3 animate-in slide-in-from-top-2 duration-150 border-t border-slate-50 pt-2.5">
-                <label className="text-xs font-bold text-slate-600">ഡെലിവറി പരിധി (Delivery Radius in KM):</label>
+                <label className="text-xs font-bold text-slate-600">{t('delivery_radius_label')}:</label>
                 <input
                   type="number"
                   min="1"
@@ -294,7 +296,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
           <div className="glass-card rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col gap-4 bg-white">
             <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-50 pb-2 flex items-center gap-1.5">
               <ImageIcon className="w-4 h-4 text-emerald-600" />
-              പ്രൊഫൈൽ ചിത്രങ്ങൾ (Profile Media)
+              {t('owner_profile_media_title')}
             </h3>
 
             <div className="flex flex-col gap-2">
@@ -321,7 +323,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
 
             <div className="flex flex-col gap-1.5">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                ബാനർ ചിത്രങ്ങൾ (Preset Banner Templates)
+                {t('owner_preset_banners_title')}
               </span>
               <div className="grid grid-cols-3 gap-2">
                 {PRESET_BANNERS.map((url, i) => (
@@ -329,7 +331,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
                     key={i}
                     type="button"
                     onClick={() => setBanner(url)}
-                    className={`h-14 rounded-lg overflow-hidden border-2 transition-all relative ${
+                    className={`h-14 rounded-lg overflow-hidden border-2 transition-all relative cursor-pointer ${
                       banner === url ? 'border-emerald-500 scale-95 shadow-md' : 'border-transparent opacity-85 hover:opacity-100'
                     }`}
                   >
@@ -349,7 +351,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
           <div className="glass-card rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col gap-4 bg-white">
             <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-50 pb-2 flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-emerald-600" />
-              ലൊക്കേഷൻ ക്രമീകരണം (Shop Coordinates Picker)
+              {t('owner_location_picker_title')}
             </h3>
 
             <div className="grid grid-cols-2 gap-2 text-xs font-bold">
@@ -376,7 +378,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
               />
             </div>
             <p className="text-[10px] text-slate-400 text-center leading-relaxed font-semibold">
-              *ലൊക്കേഷൻ മാറ്റാൻ മാപ്പിൽ ആവശ്യമുള്ള സ്ഥലത്ത് ക്ലിക്ക് ചെയ്യുകയോ പിൻ നീക്കുകയോ ചെയ്യുക.
+              {t('owner_location_picker_notice')}
             </p>
           </div>
 
@@ -384,7 +386,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
           <div className="glass-card rounded-2xl p-5 border border-slate-200 shadow-sm flex flex-col gap-4 bg-white">
             <h3 className="text-sm font-extrabold text-slate-800 border-b border-slate-50 pb-2 flex items-center gap-1.5">
               <Clock className="w-4 h-4 text-emerald-600 animate-pulse" />
-              പ്രവർത്തന സമയം (Operating Hours Matrix)
+              {t('owner_operating_hours_title')}
             </h3>
 
             <div className="flex flex-col gap-2.5">
@@ -400,7 +402,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
                       onChange={(e) => handleTimeChange(h.day, 'openTime', e.target.value)}
                       className="px-2 py-1 border border-slate-200 rounded text-xs font-semibold focus:outline-none bg-white disabled:opacity-30"
                     />
-                    <span className="text-slate-400 font-bold">to</span>
+                    <span className="text-slate-400 font-bold">{t('owner_to_label')}</span>
                     <input
                       type="time"
                       value={h.closeTime}
@@ -417,7 +419,7 @@ export default function OwnerShopClient({ pharmacy, initialHours }: Props) {
                       onChange={() => handleHourToggle(h.day)}
                       className="rounded text-red-600 w-3.5 h-3.5 focus:ring-0"
                     />
-                    <span>Closed</span>
+                    <span>{t('owner_closed_label')}</span>
                   </label>
                 </div>
               ))}

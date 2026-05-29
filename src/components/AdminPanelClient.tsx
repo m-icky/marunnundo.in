@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { verifyPharmacy, toggleSuspendPharmacy } from '@/app/actions/admin';
+import { useLanguage } from '@/context/LanguageContext';
 import { 
   ShieldAlert, 
   CheckCircle, 
@@ -14,9 +15,6 @@ import {
   Mail, 
   FileText, 
   Search,
-  Filter,
-  CheckCircle2,
-  Trash2,
   Eye,
   ShieldAlert as ShieldIcon,
   MapPin
@@ -60,6 +58,7 @@ interface Props {
 
 export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
   const router = useRouter();
+  const { t } = useLanguage();
   const [pharmacies, setPharmacies] = useState<Pharmacy[]>(initialPharmacies);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'verified' | 'suspended'>('all');
@@ -68,7 +67,11 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
 
   const handleVerify = async (id: string) => {
-    if (!confirm('Are you sure you want to verify this pharmacy? It will immediately go live.')) return;
+    const confirmationText = t('whatsapp_disabled') === 'WhatsApp ordering not enabled' 
+      ? 'Are you sure you want to verify this pharmacy? It will immediately go live.' 
+      : 'ഈ ഫാർമസി അംഗീകരിക്കാൻ നിങ്ങൾക്ക് ഉറപ്പാണോ? ഇത് ഉടൻ തന്നെ തത്സമയം ലഭ്യമാകും.';
+    
+    if (!confirm(confirmationText)) return;
     
     setActionLoadingId(id);
     try {
@@ -88,7 +91,11 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
 
   const handleToggleSuspend = async (id: string, currentState: boolean) => {
     const actionLabel = currentState ? 'unsuspend' : 'suspend';
-    if (!confirm(`Are you sure you want to ${actionLabel} this pharmacy?`)) return;
+    const confirmationText = t('whatsapp_disabled') === 'WhatsApp ordering not enabled'
+      ? `Are you sure you want to ${actionLabel} this pharmacy?`
+      : `ഈ ഫാർമസിയുടെ അനുമതി മാറ്റാൻ നിങ്ങൾക്ക് ഉറപ്പാണോ?`;
+
+    if (!confirm(confirmationText)) return;
 
     setActionLoadingId(id);
     try {
@@ -126,18 +133,20 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-8 animate-fade-in">
       
       {/* Admin Title Card */}
       <section className="flex justify-between items-center bg-white p-6 rounded-3xl border border-slate-200 shadow-md">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-2xl bg-slate-900 text-white flex items-center justify-center">
-            <ShieldIcon className="w-6 h-6 animate-pulse" />
+            <ShieldIcon className="w-6 h-6 animate-pulse text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-slate-800 tracking-tight">സൂപ്പർ അഡ്മിൻ ഡാഷ്‌ബോർഡ്</h1>
-            <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">
-              Superadmin Control Center for Marunnundo.in
+            <h1 className="text-2xl font-black text-slate-800 tracking-tight">
+              {t('admin_dashboard_title')}
+            </h1>
+            <p className="text-xs text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+              {t('admin_dashboard_subtitle')}
             </p>
           </div>
         </div>
@@ -146,11 +155,11 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
       {/* METRIC BADGES */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Total Users */}
-        <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm">
+        <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm bg-white">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ആകെ ഉപയോക്താക്കൾ</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('admin_total_users')}</span>
             <span className="text-3xl font-black text-slate-800 leading-none">{stats.totalUsers + stats.totalOwners}</span>
-            <span className="text-[10px] font-bold text-slate-500">{stats.totalUsers} Patients | {stats.totalOwners} Owners</span>
+            <span className="text-[10px] font-bold text-slate-500">{stats.totalUsers} {t('patient_tab').split(' / ')[0]} | {stats.totalOwners} {t('owner_tab')}</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
             <Users className="w-6 h-6" />
@@ -158,11 +167,11 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
         </div>
 
         {/* Active Shops */}
-        <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm">
+        <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm bg-white">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-emerald-700">സജീവ ഫാർമസികൾ</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-emerald-700">{t('admin_active_pharmacies')}</span>
             <span className="text-3xl font-black text-emerald-700 leading-none">{stats.verifiedPharmacies}</span>
-            <span className="text-[10px] font-bold text-slate-500">Verified Active Shops</span>
+            <span className="text-[10px] font-bold text-slate-500">{t('admin_verified_active')}</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
             <Store className="w-6 h-6" />
@@ -170,11 +179,11 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
         </div>
 
         {/* Pending approvals */}
-        <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm">
+        <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm bg-white">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-amber-600">അംഗീകാരം കാക്കുന്നവ</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-amber-600">{t('admin_pending_approvals')}</span>
             <span className="text-3xl font-black text-amber-600 leading-none">{stats.pendingPharmacies}</span>
-            <span className="text-[10px] font-bold text-slate-500">Awaiting DHS Verifications</span>
+            <span className="text-[10px] font-bold text-slate-500">{t('admin_awaiting_dhs')}</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
             <AlertTriangle className="w-6 h-6 animate-pulse" />
@@ -182,11 +191,11 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
         </div>
 
         {/* Total Medicines */}
-        <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm">
+        <div className="glass-card rounded-2xl p-5 border border-slate-200 flex items-center justify-between shadow-sm bg-white">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">ആകെ മരുന്നുകൾ</span>
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{t('admin_total_medicines')}</span>
             <span className="text-3xl font-black text-slate-800 leading-none">{stats.totalMedicines}</span>
-            <span className="text-[10px] font-bold text-slate-500">Registered inventory items</span>
+            <span className="text-[10px] font-bold text-slate-500">{t('admin_registered_inventory')}</span>
           </div>
           <div className="w-12 h-12 rounded-xl bg-slate-900 text-white flex items-center justify-center">
             <Package className="w-6 h-6" />
@@ -201,7 +210,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
         <div className="relative flex-1">
           <input
             type="text"
-            placeholder="കടയുടെ പേര്, വിലാസം, ലൈസൻസ് നമ്പർ അല്ലെങ്കിൽ ഉടമയുടെ പേര് തിരയൂ..."
+            placeholder={t('admin_search_placeholder')}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-slate-800 focus:outline-none"
@@ -217,7 +226,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
               statusFilter === 'all' ? 'bg-slate-900 text-white' : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
-            All ({stats.totalPharmacies})
+            {t('all_filter')} ({stats.totalPharmacies})
           </button>
           <button
             onClick={() => setStatusFilter('pending')}
@@ -225,7 +234,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
               statusFilter === 'pending' ? 'bg-amber-50 text-amber-700' : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
-            Pending ({stats.pendingPharmacies})
+            {t('owner_pending')} ({stats.pendingPharmacies})
           </button>
           <button
             onClick={() => setStatusFilter('verified')}
@@ -233,7 +242,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
               statusFilter === 'verified' ? 'bg-emerald-50 text-emerald-800' : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
-            Verified ({stats.verifiedPharmacies})
+            {t('owner_verified')} ({stats.verifiedPharmacies})
           </button>
           <button
             onClick={() => setStatusFilter('suspended')}
@@ -241,7 +250,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
               statusFilter === 'suspended' ? 'bg-red-50 text-red-700' : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
-            Suspended ({stats.suspendedPharmacies})
+            {t('admin_status_suspended')} ({stats.suspendedPharmacies})
           </button>
         </div>
       </section>
@@ -250,7 +259,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
       <section className="flex flex-col gap-5">
         {filteredPharmacies.length === 0 ? (
           <div className="bg-white border border-slate-200 rounded-2xl p-12 text-center text-slate-400 font-bold italic shadow-sm">
-            തിരഞ്ഞെടുത്ത വിഭാഗത്തിൽ ഷോപ്പുകൾ ഒന്നും കാണാനില്ല (No matching pharmacies found)
+            {t('admin_no_matching_found')}
           </div>
         ) : (
           filteredPharmacies.map(pharmacy => {
@@ -259,7 +268,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
             return (
               <div 
                 key={pharmacy.id}
-                className={`glass-card rounded-2xl p-5 sm:p-6 border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white ${
+                className={`glass-card rounded-2xl p-5 sm:p-6 border transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white hover:shadow-md ${
                   pharmacy.isSuspended 
                     ? 'border-red-200 bg-red-50/10' 
                     : !pharmacy.isVerified 
@@ -275,15 +284,15 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
                     {/* Status Pill */}
                     {pharmacy.isSuspended ? (
                       <span className="bg-red-100 text-red-700 text-[9px] font-black px-2 py-0.5 rounded-full">
-                        SUSPENDED
+                        {t('admin_status_suspended')}
                       </span>
                     ) : pharmacy.isVerified ? (
                       <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black px-2 py-0.5 rounded-full">
-                        VERIFIED ACTIVE
+                        {t('admin_status_verified')}
                       </span>
                     ) : (
                       <span className="bg-amber-100 text-amber-800 text-[9px] font-black px-2 py-0.5 rounded-full">
-                        AWAITING APPROVAL
+                        {t('admin_status_pending')}
                       </span>
                     )}
                   </div>
@@ -296,19 +305,19 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
                   <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-500 mt-1 border-t border-slate-100/50 pt-2">
                     <span className="flex items-center gap-1">
                       <FileText className="w-3.5 h-3.5 text-slate-400" />
-                      License: {pharmacy.licenseNumber}
+                      {t('license_label')}: {pharmacy.licenseNumber}
                     </span>
                     <span>•</span>
-                    <span>Medicines: {pharmacy._count.medicines}</span>
+                    <span>{t('medicines')}: {pharmacy._count.medicines}</span>
                     <span>•</span>
-                    <span>Reviews: {pharmacy._count.reviews}</span>
+                    <span>{t('patient_reviews')}: {pharmacy._count.reviews}</span>
                   </div>
                 </div>
 
-                {/* 2. Merchant Owner Profile Details (Pre-Verification check) */}
-                <div className="flex-1 flex flex-col gap-2 bg-slate-50/80 p-3.5 rounded-xl border border-slate-100 max-w-sm">
+                {/* 2. Merchant Owner Profile Details */}
+                <div className="flex-1 flex flex-col gap-2 bg-slate-50/80 p-3.5 rounded-xl border border-slate-100 max-w-sm w-full">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    ഉടമയുടെ വിവരങ്ങൾ (Owner Credentials)
+                    {t('admin_owner_credentials')}
                   </span>
                   
                   <div className="flex flex-col gap-1.5 text-xs font-bold text-slate-700">
@@ -325,7 +334,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
                 </div>
 
                 {/* 3. Administrative Action CTAs */}
-                <div className="flex flex-wrap lg:flex-col justify-start lg:justify-center gap-2.5 min-w-[150px]">
+                <div className="flex flex-wrap lg:flex-col justify-start lg:justify-center gap-2.5 min-w-[150px] w-full lg:w-auto">
                   
                   {/* Verification click */}
                   {!pharmacy.isVerified && (
@@ -335,7 +344,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
                       className="flex-1 lg:flex-none flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer"
                     >
                       <CheckCircle className="w-4 h-4" />
-                      <span>{isLoading ? 'Verifying...' : 'അംഗീകരിക്കുക (Verify Shop)'}</span>
+                      <span>{isLoading ? t('verifying_link_btn') : t('admin_verify_btn')}</span>
                     </button>
                   )}
 
@@ -353,10 +362,10 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
                       <ShieldAlert className="w-4 h-4" />
                       <span>
                         {isLoading 
-                          ? 'Processing...' 
+                          ? t('verifying_link_btn') 
                           : pharmacy.isSuspended 
-                          ? 'അനുമതി നൽകാം (Restore Shop)' 
-                          : 'സസ്‌പെൻഡ് ചെയ്യുക (Suspend Shop)'}
+                          ? t('admin_restore_btn') 
+                          : t('admin_suspend_btn')}
                       </span>
                     </button>
                   )}
@@ -370,7 +379,7 @@ export default function AdminPanelClient({ stats, initialPharmacies }: Props) {
                       className="flex-1 lg:flex-none flex items-center justify-center gap-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-all shadow-md active:scale-95 text-center"
                     >
                       <Eye className="w-4 h-4" />
-                      <span>ഷോപ്പ് കാണാം (View Shop)</span>
+                      <span>{t('admin_view_btn')}</span>
                     </a>
                   )}
 
