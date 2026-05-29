@@ -307,6 +307,16 @@ export default function PharmacyDetailsClient({ pharmacy, session }: Props) {
                 WhatsApp ordering is not enabled by owner
               </div>
             )}
+
+            <a 
+              href={`https://www.google.com/maps/dir/?api=1&destination=${pharmacy.latitude},${pharmacy.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition-all shadow-md active:scale-98 cursor-pointer text-sm"
+            >
+              <Navigation className="w-4 h-4" />
+              <span>ഗൂഗിൾ മാപ്പ് വഴി കാണിക്കുക (Open Google Maps)</span>
+            </a>
           </div>
 
           {/* Map Navigation Block */}

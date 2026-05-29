@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { registerUser, registerOwner } from '@/app/actions/auth';
+import { registerUser, registerOwner, resolveGoogleMapsUrl } from '@/app/actions/auth';
 import MapLoader from '@/components/MapLoader';
 import { 
   HeartPulse, 
@@ -42,6 +42,52 @@ export default function RegisterPage() {
   const [deliveryRadius, setDeliveryRadius] = useState('5');
   const [latitude, setLatitude] = useState('9.9723'); // Default Kochi coords
   const [longitude, setLongitude] = useState('76.2801');
+  const [googleMapsUrl, setGoogleMapsUrl] = useState('');
+  const [isResolvingMaps, setIsResolvingMaps] = useState(false);
+  const [mapsError, setMapsError] = useState('');
+
+  const handleResolveGoogleMaps = async () => {
+    if (!googleMapsUrl) {
+      setMapsError('Please enter a Google Maps link first.');
+      return;
+    }
+
+    setMapsError('');
+    setIsResolvingMaps(true);
+
+    try {
+      // First try client-side extraction if it's a long URL
+      const atPattern = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+      const qPattern = /[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/;
+      const llPattern = /[?&]ll=(-?\d+\.\d+),(-?\d+\.\d+)/;
+      const queryPattern = /[?&]query=(-?\d+\.\d+),(-?\d+\.\d+)/;
+
+      let match = googleMapsUrl.match(atPattern);
+      if (!match) match = googleMapsUrl.match(qPattern);
+      if (!match) match = googleMapsUrl.match(llPattern);
+      if (!match) match = googleMapsUrl.match(queryPattern);
+
+      if (match && match[1] && match[2]) {
+        setLatitude(match[1]);
+        setLongitude(match[2]);
+        setIsResolvingMaps(false);
+        return;
+      }
+
+      // If not parseable client-side (e.g. a short URL), use our server action
+      const res = await resolveGoogleMapsUrl(googleMapsUrl);
+      if (res.success && res.latitude && res.longitude) {
+        setLatitude(res.latitude.toString());
+        setLongitude(res.longitude.toString());
+      } else {
+        setMapsError(res.error || 'Failed to extract coordinates from this link.');
+      }
+    } catch (err: any) {
+      setMapsError(err.message || 'Something went wrong while resolving the link.');
+    } finally {
+      setIsResolvingMaps(false);
+    }
+  };
   
   // Status states
   const [error, setError] = useState('');
@@ -374,10 +420,51 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {/* MAP COORDINATES PICKER */}
-            <div className="flex flex-col gap-2">
+            {/* GOOGLE MAPS LINK INPUT */}
+            <div className="flex flex-col gap-2.5 bg-emerald-50/30 p-4 rounded-2xl border border-emerald-100/50">
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-widest flex items-center gap-1.5">
+                <Navigation className="w-4 h-4 text-emerald-600" />
+                ഗൂഗിൾ മാപ്പ് ലിങ്ക് (Google Maps Link) *
+              </label>
+              
+              <div className="flex gap-2">
+                <input
+                  type="url"
+                  placeholder="https://maps.app.goo.gl/... or https://google.com/maps/..."
+                  value={googleMapsUrl}
+                  onChange={(e) => {
+                    setGoogleMapsUrl(e.target.value);
+                    setMapsError('');
+                  }}
+                  required={activeTab === 'owner'}
+                  disabled={activeTab === 'user'}
+                  className="flex-1 px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs sm:text-sm bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                />
+                <button
+                  type="button"
+                  onClick={handleResolveGoogleMaps}
+                  disabled={isResolvingMaps || activeTab === 'user'}
+                  className="bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs transition-all active:scale-95 shadow-md shadow-emerald-600/10 cursor-pointer whitespace-nowrap"
+                >
+                  {isResolvingMaps ? 'പരിശോധിക്കുന്നു...' : 'ലിങ്ക് വെരിഫൈ ചെയ്യുക'}
+                </button>
+              </div>
+
+              {mapsError && (
+                <p className="text-[11px] font-semibold text-red-600 animate-pulse">
+                  ⚠️ {mapsError}
+                </p>
+              )}
+              
+              <p className="text-[10px] text-slate-400 leading-relaxed">
+                *നിങ്ങളുടെ ഫാർമസിയുടെ ഗൂഗിൾ മാപ്പ് ലിങ്ക് കോപ്പി പേസ്റ്റ് ചെയ്ത് "ലിങ്ക് വെരിഫൈ ചെയ്യുക" ബട്ടൺ ക്ലിക്ക് ചെയ്യുക. ലൊക്കേഷൻ ഭൂപടത്തിൽ തനിയെ അടയാളപ്പെടുത്തുന്നതാണ്.
+              </p>
+            </div>
+
+            {/* MAP COORDINATES PREVIEW */}
+            <div className="flex flex-col gap-2 mt-1">
               <label className="text-xs font-bold text-slate-600 uppercase tracking-widest">
-                ലൊക്കേഷൻ തിരഞ്ഞെടുക്കുക (Set Map Location) *
+                ലൊക്കേഷൻ പ്രിവ്യൂ (Location Preview)
               </label>
               
               <div className="grid grid-cols-2 gap-2 text-xs font-bold">
@@ -404,7 +491,7 @@ export default function RegisterPage() {
                 />
               </div>
               <p className="text-[10px] text-slate-400 text-center leading-relaxed">
-                *ഭൂപടത്തിൽ ക്ലിക്ക് ചെയ്യുകയോ പിൻ വലിച്ചിടുകയോ ചെയ്യുമ്പോൾ കോർഡിനേറ്റുകൾ തനിയെ സെറ്റാകുന്നതാണ്.
+                *ഭൂപടത്തിൽ മാർക്കർ ഡ്രാഗ് ചെയ്ത് ലൊക്കേഷൻ കൂടുതൽ കൃത്യമാക്കാവുന്നതാണ്.
               </p>
             </div>
 

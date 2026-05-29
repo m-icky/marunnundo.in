@@ -21,16 +21,13 @@ export default function LoginPage() {
     try {
       const res = await login(email, password);
       if (res.success) {
-        // Force refresh to update the session in root layout header
-        router.refresh();
-
-        // Redirect based on role
+        // Use window.location.href to force full layout reload and prevent Next.js layout caching
         if (res.role === 'SUPERADMIN') {
-          router.push('/admin');
+          window.location.href = '/admin';
         } else if (res.role === 'OWNER') {
-          router.push('/owner');
+          window.location.href = '/owner';
         } else {
-          router.push('/');
+          window.location.href = '/';
         }
       } else {
         setError(res.error || 'Invalid credentials');

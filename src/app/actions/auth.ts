@@ -46,7 +46,7 @@ export async function login(email: string, password: string) {
     cookieStore.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7, // 7 days
       path: '/',
     });
@@ -109,7 +109,7 @@ export async function registerUser(name: string, email: string, phone: string, p
     cookieStore.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7,
       path: '/',
     });
@@ -242,7 +242,7 @@ export async function registerOwner(data: RegisterOwnerInput) {
     cookieStore.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 7,
       path: '/',
     });
@@ -268,5 +268,56 @@ export async function getSession() {
     return await verifyToken(token);
   } catch {
     return null;
+  }
+}
+
+export async function resolveGoogleMapsUrl(url: string) {
+  try {
+    if (!url) {
+      return { success: false, error: 'Google Maps link is required' };
+    }
+
+    let finalUrl = url;
+
+    // Resolve short URLs
+    if (url.includes('maps.app.goo.gl') || url.includes('goo.gl/maps') || url.includes('maps.google.com/url')) {
+      const response = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        },
+      });
+      finalUrl = response.url;
+    }
+
+    // Coordinate regex patterns
+    const atPattern = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
+    const qPattern = /[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/;
+    const llPattern = /[?&]ll=(-?\d+\.\d+),(-?\d+\.\d+)/;
+    const queryPattern = /[?&]query=(-?\d+\.\d+),(-?\d+\.\d+)/;
+
+    let match = finalUrl.match(atPattern);
+    if (!match) match = finalUrl.match(qPattern);
+    if (!match) match = finalUrl.match(llPattern);
+    if (!match) match = finalUrl.match(queryPattern);
+
+    if (match && match[1] && match[2]) {
+      const latitude = parseFloat(match[1]);
+      const longitude = parseFloat(match[2]);
+      return {
+        success: true,
+        latitude,
+        longitude,
+      };
+    }
+
+    return {
+      success: false,
+      error: 'Could not extract coordinates from this Google Maps link. Please verify it points directly to a location pin.',
+    };
+  } catch (error: any) {
+    console.error('Error resolving Google Maps URL:', error);
+    return { success: false, error: 'Failed to resolve the link. Please check your network or enter manually.' };
   }
 }

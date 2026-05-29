@@ -141,6 +141,8 @@ export default function LeafletMap({
       } else {
         setMapCenter([centerLat, centerLng]);
       }
+    } else if (mode === 'pick' && centerLat && centerLng) {
+      setMapCenter([centerLat, centerLng]);
     }
   }, [mode, userLat, userLng, centerLat, centerLng]);
 
