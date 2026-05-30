@@ -28,3 +28,27 @@ export async function verifyToken(token: string): Promise<JWTPayload | null> {
     return null;
   }
 }
+
+export interface ResetPasswordPayload {
+  email: string;
+  otp?: string;
+  otpVerified?: boolean;
+}
+
+export async function signResetToken(payload: ResetPasswordPayload): Promise<string> {
+  return await new SignJWT({ ...payload })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setExpirationTime('10m') // 10 minutes expiration
+    .sign(JWT_SECRET);
+}
+
+export async function verifyResetToken(token: string): Promise<ResetPasswordPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET);
+    return payload as unknown as ResetPasswordPayload;
+  } catch (error) {
+    console.error('Reset JWT Verification failed:', error);
+    return null;
+  }
+}

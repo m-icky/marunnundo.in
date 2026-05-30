@@ -47,7 +47,7 @@ interface Props {
 
 const PRESET_BANNERS = [
   'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&auto=format&fit=crop&q=80',
-  'https://images.unsplash.com/photo-1607619056574-7b8d304b3b3a?w=600&auto=format&fit=crop&q=80',
+  'https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=600&auto=format&fit=crop&q=80',
   'https://images.unsplash.com/photo-1586015555751-63bb77f4322a?w=600&auto=format&fit=crop&q=80'
 ];
 

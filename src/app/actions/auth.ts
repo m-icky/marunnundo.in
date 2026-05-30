@@ -3,9 +3,9 @@
 import { cookies } from 'next/headers';
 import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db';
-import { signToken, verifyToken } from '@/lib/jwt';
+import { signToken, verifyToken, signResetToken, verifyResetToken } from '@/lib/jwt';
 import { z } from 'zod';
-import { sendWelcomeEmail } from '@/lib/mail';
+import { sendWelcomeEmail, sendOTPEmail } from '@/lib/mail';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -266,5 +266,111 @@ export async function resolveGoogleMapsUrl(url: string) {
   } catch (error: any) {
     console.error('Error resolving Google Maps URL:', error);
     return { success: false, error: 'Failed to resolve the link. Please check your network or enter manually.' };
+  }
+}
+
+export async function sendForgotPasswordOTP(email: string) {
+  try {
+    if (!email) {
+      return { success: false, error: 'Email address is required' };
+    }
+
+    const trimmedEmail = email.trim().toLowerCase();
+
+    // Check if the user exists in the database
+    const user = await db.user.findUnique({
+      where: { email: trimmedEmail },
+    });
+
+    if (!user) {
+      return { success: false, error: 'We could not find an account with that email address.' };
+    }
+
+    // Generate a 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Send OTP email
+    const emailResult = await sendOTPEmail({
+      email: trimmedEmail,
+      name: user.name,
+      otp,
+    });
+
+    if (!emailResult.success) {
+      return { success: false, error: 'Failed to send verification code. Please check your email configuration.' };
+    }
+
+    // Sign reset token (valid for 10 minutes)
+    const resetToken = await signResetToken({
+      email: trimmedEmail,
+      otp,
+    });
+
+    return { success: true, resetToken };
+  } catch (error: any) {
+    console.error('sendForgotPasswordOTP action error:', error);
+    return { success: false, error: error.message || 'An unexpected error occurred' };
+  }
+}
+
+export async function verifyForgotPasswordOTP(resetToken: string, enteredOTP: string) {
+  try {
+    if (!resetToken || !enteredOTP) {
+      return { success: false, error: 'Verification code is required' };
+    }
+
+    // Verify token
+    const decoded = await verifyResetToken(resetToken);
+    if (!decoded || !decoded.otp) {
+      return { success: false, error: 'OTP session expired or invalid. Please request a new verification code.' };
+    }
+
+    // Check if OTP matches
+    if (enteredOTP.trim() !== decoded.otp) {
+      return { success: false, error: 'Invalid 6-digit verification code. Please try again.' };
+    }
+
+    // Sign a new token indicating that the OTP was verified for this email
+    const verifiedToken = await signResetToken({
+      email: decoded.email,
+      otpVerified: true,
+    });
+
+    return { success: true, verifiedToken };
+  } catch (error: any) {
+    console.error('verifyForgotPasswordOTP action error:', error);
+    return { success: false, error: error.message || 'An unexpected error occurred' };
+  }
+}
+
+export async function resetPassword(verifiedToken: string, newPassword: string) {
+  try {
+    if (!verifiedToken || !newPassword) {
+      return { success: false, error: 'All fields are required' };
+    }
+
+    if (newPassword.length < 6) {
+      return { success: false, error: 'Password must be at least 6 characters long' };
+    }
+
+    // Verify token
+    const decoded = await verifyResetToken(verifiedToken);
+    if (!decoded || !decoded.otpVerified) {
+      return { success: false, error: 'Session invalid or expired. Please verify your OTP code again.' };
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password in database
+    await db.user.update({
+      where: { email: decoded.email },
+      data: { password: hashedPassword },
+    });
+
+    return { success: true };
+  } catch (error: any) {
+    console.error('resetPassword action error:', error);
+    return { success: false, error: error.message || 'An unexpected error occurred' };
   }
 }

@@ -20,7 +20,7 @@ import {
   CheckCircle,
   Navigation,
   Hash,
-  Sparkles,
+  Sparkle,
   ArrowRight,
   ShieldCheck,
   Compass,
@@ -243,14 +243,14 @@ export default function RegisterPage() {
         {/* Brand Banner Card */}
         <header className="bg-gradient-to-br from-white to-slate-50 border border-slate-200/80 rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row justify-between items-center gap-6 shadow-xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-100/20 rounded-full blur-2xl"></div>
-          <div className="flex items-center gap-4.5 relative z-10">
+          <div className="flex items-center gap-4 relative z-10">
             <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl overflow-hidden bg-white border border-slate-100 shadow-md p-1.5 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.png" alt="Marunnundo Logo" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col gap-1 text-left">
               <div className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-600 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-emerald-500/10 w-max">
-                <Sparkles className="w-3 h-3 text-emerald-500 animate-spin" />
+                <Sparkle className="w-3 h-3 text-emerald-500 animate-spin" />
                 <span>{language === 'ml' ? 'ഫാർമസി രജിസ്ട്രേഷൻ' : 'PHARMACY ONBOARDING'}</span>
               </div>
               <h1 className="text-2xl sm:text-3.5xl font-black text-slate-800 tracking-tight leading-none">
@@ -782,7 +782,7 @@ export default function RegisterPage() {
               className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-extrabold py-4 rounded-2xl transition-all shadow-md active:scale-98 cursor-pointer text-sm flex items-center justify-center gap-2"
             >
               <span>{isLoading ? t('registering_shop_btn') : t('register_shop_btn')}</span>
-              <ArrowRight className="w-4.5 h-4.5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
 
           </div>
@@ -792,7 +792,7 @@ export default function RegisterPage() {
         {/* Unified sleek Footer info */}
         <footer className="mt-8 border-t border-slate-200 pt-6 text-center flex flex-col items-center gap-3">
           <div className="flex items-center gap-1.5 text-xs text-slate-500 font-bold">
-            <ShieldCheck className="w-4.5 h-4.5 text-emerald-500" />
+            <ShieldCheck className="w-4 h-4 text-emerald-500" />
             <span>Secure Merchant Portal & Verified Network</span>
           </div>
           <p className="text-xs text-slate-600 font-bold">
@@ -836,7 +836,7 @@ export default function RegisterPage() {
             {/* Spinner Loader */}
             <div className="flex flex-col items-center gap-3 mt-2 w-full">
               <div className="flex items-center justify-center gap-2.5 bg-slate-50 border border-slate-100 rounded-2xl py-3.5 px-5 w-full">
-                <Loader2 className="w-4.5 h-4.5 text-emerald-600 animate-spin" />
+                <Loader2 className="w-5 h-5 text-emerald-600 animate-spin" />
                 <span className="text-xs font-bold text-slate-600">
                   {language === 'ml' ? 'ഡാഷ്‌ബോർഡിലേക്ക് റീഡയറക്ട് ചെയ്യുന്നു...' : 'Preparing your secure dashboard...'}
                 </span>

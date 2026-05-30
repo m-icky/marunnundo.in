@@ -141,7 +141,7 @@ export default function PrivacyPolicyClient() {
                       {/* Category 1: User */}
                       <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col gap-2">
                         <h3 className="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-1.5 text-emerald-800">
-                          <CheckCircle className="w-4.5 h-4.5 text-emerald-600" />
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
                           സാധാരണ ഉപയോക്താക്കൾ (Normal Users / Patients)
                         </h3>
                         <ul className="list-disc pl-5 text-xs sm:text-sm flex flex-col gap-1.5 text-slate-600">
@@ -154,7 +154,7 @@ export default function PrivacyPolicyClient() {
                       {/* Category 2: Owners */}
                       <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col gap-2">
                         <h3 className="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-1.5 text-blue-800">
-                          <CheckCircle className="w-4.5 h-4.5 text-blue-600" />
+                          <CheckCircle className="w-4 h-4 text-blue-600" />
                           ഫാർമസി ഉടമസ്ഥർ (Pharmacy Owners)
                         </h3>
                         <ul className="list-disc pl-5 text-xs sm:text-sm flex flex-col gap-1.5 text-slate-600">
@@ -289,7 +289,7 @@ export default function PrivacyPolicyClient() {
                       {/* Category 1: User */}
                       <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col gap-2">
                         <h3 className="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-1.5 text-emerald-800">
-                          <CheckCircle className="w-4.5 h-4.5 text-emerald-600" />
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
                           Normal Users / Patients
                         </h3>
                         <ul className="list-disc pl-5 text-xs sm:text-sm flex flex-col gap-1.5 text-slate-600">
@@ -302,7 +302,7 @@ export default function PrivacyPolicyClient() {
                       {/* Category 2: Owners */}
                       <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col gap-2">
                         <h3 className="font-bold text-slate-900 text-sm sm:text-base flex items-center gap-1.5 text-blue-800">
-                          <CheckCircle className="w-4.5 h-4.5 text-blue-600" />
+                          <CheckCircle className="w-4 h-4 text-blue-600" />
                           Pharmacy Owners
                         </h3>
                         <ul className="list-disc pl-5 text-xs sm:text-sm flex flex-col gap-1.5 text-slate-600">

@@ -9,7 +9,7 @@ import { useLanguage } from '@/context/LanguageContext';
 
 export default function LoginPage() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -107,9 +107,19 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-xs font-bold p-3.5 rounded-xl flex items-center gap-2 animate-shake">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{error}</span>
+            <div className="flex flex-col gap-2">
+              <div className="bg-red-50 border border-red-200 text-red-700 text-xs font-bold p-3.5 rounded-xl flex items-center gap-2 animate-shake">
+                <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                <span>{error}</span>
+              </div>
+              <div className="text-right">
+                <Link
+                  href="/forgot-password"
+                  className="text-xs font-extrabold text-emerald-600 hover:text-emerald-700 hover:underline transition-colors"
+                >
+                  {language === 'ml' ? 'പാസ്‌വേഡ് മറന്നോ?' : 'Forgot Password?'}
+                </Link>
+              </div>
             </div>
           )}
 

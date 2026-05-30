@@ -49,7 +49,7 @@ export default function OwnerSidebarClient({ primaryPharmacy }: Props) {
                 : 'border-transparent text-slate-400 hover:text-white hover:bg-slate-800/40'
             }`}
           >
-            <Icon className="w-4.5 h-4.5" />
+            <Icon className="w-4 h-4" />
             {label}
           </Link>
         ))}
@@ -60,7 +60,7 @@ export default function OwnerSidebarClient({ primaryPharmacy }: Props) {
             rel="noreferrer"
             className="flex-shrink-0 flex flex-col items-center gap-1 px-5 py-3 text-[10px] font-bold text-emerald-400 hover:text-emerald-300 border-b-2 border-transparent whitespace-nowrap"
           >
-            <Store className="w-4.5 h-4.5" />
+            <Store className="w-4 h-4" />
             {t('owner_live_preview')}
           </a>
         )}

@@ -65,6 +65,61 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const isMl = language === 'ml';
+
+  // Dynamic language localized strings
+  const strings = {
+    inventoryTitle: isMl ? 'മരുന്ന് സ്റ്റോക്ക്' : 'Inventory Manager',
+    inventorySubtitle: isMl 
+      ? 'പുതിയ മരുന്നുകൾ ചേർക്കുക, അളവ്, വില, വിവരങ്ങൾ എന്നിവ പുതുക്കുക' 
+      : 'Add new stock entries, update quantities, set prices and requirements',
+    addMedicineBtn: isMl ? 'മരുന്ന് ചേർക്കുക' : 'Add Medicine',
+    searchPlaceholder: isMl 
+      ? 'മരുന്നിന്റെ പേരോ ഇനമോ ടൈപ്പ് ചെയ്യുക...' 
+      : 'Search by brand or generic name...',
+    thMedicine: isMl ? 'മരുന്നിന്റെ പേര്' : 'Medicine',
+    thSalt: isMl ? 'ജനറിക് പേര്' : 'Salt / Generic Name',
+    thCategory: isMl ? 'വിഭാഗം' : 'Category',
+    thQty: isMl ? 'അളവ്' : 'Qty',
+    thPrice: isMl ? 'വില' : 'Price',
+    thPrescription: isMl ? 'Rx പ്രിസ്ക്രിപ്ഷൻ' : 'Prescription Required',
+    thActions: isMl ? 'മാറ്റങ്ങൾ വരുത്താം' : 'Actions',
+    noMedicines: isMl ? 'സ്റ്റോക്കിൽ മരുന്നുകൾ ഒന്നും കണ്ടെത്തിയില്ല' : 'No medicines found in stock',
+    
+    // Modal strings
+    modalTitleEdit: isMl ? 'മരുന്ന് വിവരം എഡിറ്റ് ചെയ്യാം' : 'Edit Medicine Details',
+    modalTitleAdd: isMl ? 'പുതിയ മരുന്ന് ചേർക്കാം' : 'Add New Medicine',
+    labelBrandName: isMl ? 'മരുന്നിന്റെ പേര് (Brand Name) *' : 'Brand Name *',
+    labelGenericName: isMl ? 'ജനറിക് പേര് (Generic Formulation) *' : 'Generic Formulation *',
+    labelCategory: isMl ? 'വിഭാഗം *' : 'Category *',
+    labelManufacturer: isMl ? 'നിർമ്മാതാവ് (Mfg)' : 'Manufacturer (Mfg)',
+    labelBatchNumber: isMl ? 'ബാച്ച് നമ്പർ' : 'Batch Number',
+    labelExpiryDate: isMl ? 'കാലാവധി തീയതി' : 'Expiry Date',
+    labelQuantity: isMl ? 'സ്റ്റോക്ക് അളവ് (Qty) *' : 'Stock Quantity (Qty) *',
+    labelPrice: isMl ? 'വില (Price INR) *' : 'Price (Price INR) *',
+    labelPrescriptionRequired: isMl ? 'Rx പ്രിസ്ക്രിപ്ഷൻ നിർബന്ധമാണ്' : 'Rx Prescription Required',
+    
+    catTablet: isMl ? 'Tablet (ഗുളിക)' : 'Tablet',
+    catSyrup: isMl ? 'Syrup (സിറപ്പ്)' : 'Syrup',
+    catCapsule: isMl ? 'Capsule (ക്യാപ്സ്യൂൾ)' : 'Capsule',
+    catInjection: isMl ? 'Injection (ഇഞ്ചക്ഷൻ)' : 'Injection',
+    catOintment: isMl ? 'Ointment (ക്രീം/തൈലം)' : 'Ointment',
+    catInhaler: isMl ? 'Inhaler (ഇൻഹേലർ)' : 'Inhaler',
+
+    saving: isMl ? 'മാറ്റങ്ങൾ സംരക്ഷിക്കുന്നു...' : 'Saving changes...',
+    saveChanges: isMl ? 'മാറ്റങ്ങൾ സംരക്ഷിക്കുക' : 'Save Changes',
+    addStock: isMl ? 'സ്റ്റോക്കിലേക്ക് ചേർക്കാം' : 'Add Stock',
+    medDeletedSuccess: isMl ? 'മരുന്ന് വിജയകരമായി ഒഴിവാക്കി!' : 'Medicine deleted successfully!',
+    medDeleteConfirm: isMl ? 'ഈ മരുന്ന് ഡിലീറ്റ് ചെയ്യണം എന്ന് ഉറപ്പാണോ?' : 'Are you sure you want to delete this medicine?',
+    deleteFailed: isMl ? 'ഡിലീറ്റ് ചെയ്യാൻ സാധിച്ചില്ല' : 'Failed to delete',
+    expiredDateError: isMl ? 'കാലാവധി കഴിഞ്ഞ തീയതി നൽകാൻ സാധിക്കില്ല.' : 'Expiry date cannot be in the past.',
+    medUpdateSuccess: isMl ? 'മരുന്ന് വിവരങ്ങൾ വിജയകരമായി അപ്‌ഡേറ്റ് ചെയ്തു!' : 'Medicine details updated successfully!',
+    medUpdateFail: isMl ? 'വിവരങ്ങൾ അപ്‌ഡേറ്റ് ചെയ്യാൻ സാധിച്ചില്ല' : 'Failed to update medicine',
+    medAddSuccess: isMl ? 'പുതിയ മരുന്ന് സ്റ്റോക്കിലേക്ക് ചേർത്തു!' : 'New medicine added to stock!',
+    medAddFail: isMl ? 'മരുന്ന് ചേർക്കാൻ സാധിച്ചില്ല' : 'Failed to add medicine',
+    errorTitle: isMl ? 'പിശക് സംഭവിച്ചു' : 'An error occurred',
+  };
+
   const openAddModal = () => {
     setEditingMed(null);
     setName('');
@@ -98,17 +153,17 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this medicine?')) return;
+    if (!confirm(strings.medDeleteConfirm)) return;
     try {
       const res = await deleteMedicine(pharmacyId, id);
       if (res.success) {
         setMedicines(prev => prev.filter(m => m.id !== id));
         router.refresh();
       } else {
-        alert(res.error || 'Failed to delete');
+        alert(res.error || strings.deleteFailed);
       }
     } catch (err: any) {
-      alert(err.message || 'Error occurred');
+      alert(err.message || strings.errorTitle);
     }
   };
 
@@ -125,10 +180,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
       selectedDate.setHours(0, 0, 0, 0);
 
       if (selectedDate < today) {
-        setError(language === 'ml' 
-          ? 'കാലാവധി കഴിഞ്ഞ തീയതി നൽകാൻ സാധിക്കില്ല (Expiry date cannot be in the past).' 
-          : 'Expiry date cannot be in the past / already completed.'
-        );
+        setError(strings.expiredDateError);
         setIsLoading(false);
         return;
       }
@@ -152,26 +204,26 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
         const res = await updateMedicine(pharmacyId, editingMed.id, data);
         if (res.success && res.medicine) {
           setMedicines(prev => prev.map(m => m.id === editingMed.id ? (res.medicine as any) : m));
-          setSuccess('Medicine details updated successfully!');
+          setSuccess(strings.medUpdateSuccess);
           setTimeout(() => setIsModalOpen(false), 1000);
           router.refresh();
         } else {
-          setError(res.error || 'Failed to update medicine');
+          setError(res.error || strings.medUpdateFail);
         }
       } else {
         // Add Mode
         const res = await addMedicine(pharmacyId, data);
         if (res.success && res.medicine) {
           setMedicines(prev => [res.medicine as any, ...prev]);
-          setSuccess('New medicine added to stock!');
+          setSuccess(strings.medAddSuccess);
           setTimeout(() => setIsModalOpen(false), 1000);
           router.refresh();
         } else {
-          setError(res.error || 'Failed to add medicine');
+          setError(res.error || strings.medAddFail);
         }
       }
     } catch (err: any) {
-      setError(err.message || 'Error occurred');
+      setError(err.message || strings.errorTitle);
     } finally {
       setIsLoading(false);
     }
@@ -193,19 +245,19 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
             <PlusCircle className="w-6 h-6" />
           </div>
           <div>
-            <h2 className="text-xl font-extrabold text-slate-800">മരുന്ന് സ്റ്റോക്ക് (Inventory Manager)</h2>
+            <h2 className="text-xl font-extrabold text-slate-800">{strings.inventoryTitle}</h2>
             <p className="text-xs text-slate-400 font-semibold uppercase tracking-wider mt-0.5">
-              Add new stock entries, update quantities, set prices and requirements
+              {strings.inventorySubtitle}
             </p>
           </div>
         </div>
 
         <button
           onClick={openAddModal}
-          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-all shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5 self-start sm:self-center"
+          className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-6 rounded-xl text-sm transition-all shadow-md active:scale-95 cursor-pointer flex items-center gap-1.5 self-start sm:self-center animate-pulse hover:animate-none"
         >
           <PlusCircle className="w-4 h-4" />
-          <span>മരുന്ന് ചേർക്കുക (Add Medicine)</span>
+          <span>{strings.addMedicineBtn}</span>
         </button>
       </section>
 
@@ -214,7 +266,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
         <div className="relative flex-1">
           <input
             type="text"
-            placeholder="മരുന്നിന്റെ പേരോ വിഭാഗമോ ടൈപ്പ് ചെയ്യുക (Search by brand or generic name...)"
+            placeholder={strings.searchPlaceholder}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
@@ -229,20 +281,20 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-slate-50 border-b border-slate-100 text-slate-400 uppercase text-[10px] font-bold tracking-wider">
-                <th className="py-4 px-6">മരുന്നിന്റെ പേര് (Medicine)</th>
-                <th className="py-4 px-6">ജനറിക് പേര് (Salt)</th>
-                <th className="py-4 px-6">വിഭാഗം (Category)</th>
-                <th className="py-4 px-6 text-center">അളവ് (Qty)</th>
-                <th className="py-4 px-6 text-right">വില (Price)</th>
-                <th className="py-4 px-6 text-center">Rx പ്രിസ്ക്രിപ്ഷൻ</th>
-                <th className="py-4 px-6 text-right">മാറ്റങ്ങൾ വരുത്താം</th>
+                <th className="py-4 px-6">{strings.thMedicine}</th>
+                <th className="py-4 px-6">{strings.thSalt}</th>
+                <th className="py-4 px-6">{strings.thCategory}</th>
+                <th className="py-4 px-6 text-center">{strings.thQty}</th>
+                <th className="py-4 px-6 text-right">{strings.thPrice}</th>
+                <th className="py-4 px-6 text-center">{strings.thPrescription}</th>
+                <th className="py-4 px-6 text-right">{strings.thActions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50 text-xs font-semibold text-slate-700">
               {filteredMedicines.length === 0 ? (
                 <tr>
                   <td colSpan={7} className="py-12 text-center text-slate-400 font-bold italic">
-                    സ്റ്റോക്കിൽ മരുന്നുകൾ ഒന്നും കണ്ടെത്തിയില്ല (No medicines found)
+                    {strings.noMedicines}
                   </td>
                 </tr>
               ) : (
@@ -266,7 +318,12 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
                     {/* Category */}
                     <td className="py-4 px-6">
                       <span className="inline-block bg-slate-100 text-slate-600 font-bold px-2.5 py-0.5 rounded-full text-[10px]">
-                        {med.category}
+                        {med.category === 'Tablet' ? (isMl ? 'ഗുളിക' : 'Tablet') :
+                         med.category === 'Syrup' ? (isMl ? 'സിറപ്പ്' : 'Syrup') :
+                         med.category === 'Capsule' ? (isMl ? 'ക്യാപ്സ്യൂൾ' : 'Capsule') :
+                         med.category === 'Injection' ? (isMl ? 'ഇഞ്ചക്ഷൻ' : 'Injection') :
+                         med.category === 'Ointment' ? (isMl ? 'ക്രീം/തൈലം' : 'Ointment') :
+                         med.category === 'Inhaler' ? (isMl ? 'ഇൻഹേലർ' : 'Inhaler') : med.category}
                       </span>
                     </td>
 
@@ -292,7 +349,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
                     <td className="py-4 px-6 text-center">
                       {med.prescriptionRequired ? (
                         <span className="text-[9px] font-extrabold text-red-700 bg-red-50 border border-red-100 px-2 py-0.5 rounded">
-                          Required
+                          {isMl ? 'ആവശ്യമാണ്' : 'Required'}
                         </span>
                       ) : (
                         <span className="text-[9px] font-extrabold text-slate-500 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded">
@@ -309,14 +366,14 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
                           className="p-2 text-slate-400 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-all cursor-pointer"
                           title="Edit"
                         >
-                          <Edit3 className="w-4.5 h-4.5" />
+                          <Edit3 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDelete(med.id)}
                           className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all cursor-pointer"
                           title="Delete"
                         >
-                          <Trash2 className="w-4.5 h-4.5" />
+                          <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
                     </td>
@@ -337,7 +394,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
             {/* Modal Title */}
             <div className="flex justify-between items-center pb-3 border-b border-slate-100">
               <h3 className="font-extrabold text-slate-800 text-base">
-                {editingMed ? 'മരുന്ന് വിവരം എഡിറ്റ് ചെയ്യാം (Edit Medicine)' : 'പുതിയ മരുന്ന് ചേർക്കാം (Add Medicine)'}
+                {editingMed ? strings.modalTitleEdit : strings.modalTitleAdd}
               </h3>
               <button
                 onClick={() => setIsModalOpen(false)}
@@ -352,7 +409,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
               
               {/* Brand Name */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">മരുന്നിന്റെ പേര് (Brand Name) *</label>
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{strings.labelBrandName}</label>
                 <input
                   type="text"
                   placeholder="e.g. Dolo 650"
@@ -365,7 +422,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
 
               {/* Generic Name */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">ജനറിക് പേര് (Generic Formulation) *</label>
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{strings.labelGenericName}</label>
                 <input
                   type="text"
                   placeholder="e.g. Paracetamol"
@@ -379,23 +436,23 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
               {/* Category & Manufacturer */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">വിഭാഗം (Category) *</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{strings.labelCategory}</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl border border-slate-200 text-xs focus:ring-2 focus:ring-emerald-500 focus:outline-none bg-white"
                   >
-                    <option value="Tablet">Tablet (ഗുളിക)</option>
-                    <option value="Syrup">Syrup (സിറപ്പ്)</option>
-                    <option value="Capsule">Capsule (ക്യാപ്സ്യൂൾ)</option>
-                    <option value="Injection">Injection (ഇഞ്ചക്ഷൻ)</option>
-                    <option value="Ointment">Ointment (ക്രീം/തൈലം)</option>
-                    <option value="Inhaler">Inhaler (ഇൻഹേലർ)</option>
+                    <option value="Tablet">{strings.catTablet}</option>
+                    <option value="Syrup">{strings.catSyrup}</option>
+                    <option value="Capsule">{strings.catCapsule}</option>
+                    <option value="Injection">{strings.catInjection}</option>
+                    <option value="Ointment">{strings.catOintment}</option>
+                    <option value="Inhaler">{strings.catInhaler}</option>
                   </select>
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">നിർമ്മാതാവ് (Mfg)</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{strings.labelManufacturer}</label>
                   <input
                     type="text"
                     placeholder="e.g. Cipla"
@@ -409,7 +466,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
               {/* Batch & Expiry */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Batch Number</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{strings.labelBatchNumber}</label>
                   <input
                     type="text"
                     placeholder="e.g. B-1029"
@@ -420,7 +477,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Expiry Date</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{strings.labelExpiryDate}</label>
                   <input
                     type="date"
                     value={expiryDate}
@@ -434,7 +491,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
               {/* Qty & Price */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">സ്റ്റോക്ക് അളവ് (Qty) *</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{strings.labelQuantity}</label>
                   <input
                     type="number"
                     min="0"
@@ -446,7 +503,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">വില (Price INR) *</label>
+                  <label className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{strings.labelPrice}</label>
                   <input
                     type="number"
                     step="0.01"
@@ -467,7 +524,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
                   onChange={(e) => setPrescriptionRequired(e.target.checked)}
                   className="rounded text-red-600 w-4 h-4 focus:ring-0"
                 />
-                <span>Rx പ്രിസ്ക്രിപ്ഷൻ നിർബന്ധമാണ് (Prescription Required)</span>
+                <span>{strings.labelPrescriptionRequired}</span>
               </label>
 
               {error && (
@@ -489,7 +546,7 @@ export default function OwnerMedicinesClient({ pharmacyId, initialMedicines }: P
                 disabled={isLoading}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer mt-3"
               >
-                {isLoading ? 'Saving changes...' : editingMed ? 'മാറ്റങ്ങൾ വരുത്തുക (Save Changes)' : 'സ്റ്റോക്കിലേക്ക് ചേർക്കാം (Add Stock)'}
+                {isLoading ? strings.saving : editingMed ? strings.saveChanges : strings.addStock}
               </button>
 
             </form>

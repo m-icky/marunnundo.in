@@ -11,6 +11,7 @@ import {
   Star, 
   MessageSquare,
   ArrowRight,
+  Sparkle,
   Sparkles,
   ChevronRight
 } from 'lucide-react';
@@ -74,7 +75,7 @@ export default function OwnerDashboardClient({ sessionName, analytics, pharmacyI
       <section className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-slate-900 to-slate-800 p-6 sm:p-8 rounded-3xl text-white shadow-xl">
         <div className="flex flex-col gap-2">
           <div className="inline-flex items-center gap-1 bg-slate-800/80 text-emerald-400 text-[10px] font-bold px-2.5 py-1 rounded-full w-max border border-slate-700">
-            <Sparkles className="w-3 h-3 animate-spin text-emerald-400" /> 
+            <Sparkle className="w-3 h-3 animate-spin text-emerald-400" /> 
             <span>{t('pharmacy_portal').toUpperCase()}</span>
           </div>
           <h1 className="text-2xl sm:text-3.5xl font-black tracking-tight leading-none">

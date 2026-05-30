@@ -316,3 +316,214 @@ The Marunnundo.in Team`;
     return { success: false, error: error.message || 'Error occurred while sending mail' };
   }
 }
+
+interface SendOTPEmailInput {
+  email: string;
+  name: string;
+  otp: string;
+}
+
+/**
+ * Sends a premium branded HTML OTP verification email to the pharmacy owner.
+ */
+export async function sendOTPEmail({ email, name, otp }: SendOTPEmailInput) {
+  try {
+    const logoUrl = 'https://raw.githubusercontent.com/m-icky/marunnundo.in/main/public/logo.png';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://marunnundo-in.vercel.app';
+
+    const textContent = `Hello ${name},
+
+Your password reset verification code is: ${otp}
+
+This code is valid for 10 minutes. Please enter this code on the verification screen to proceed with resetting your password.
+
+If you did not request this, please ignore this email.
+
+Best regards,
+The Marunnundo.in Team`;
+
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Password Reset OTP Verification</title>
+        <style>
+          body {
+            background-color: #f8fafc;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+          }
+          .email-wrapper {
+            background-color: #f8fafc;
+            padding: 30px 15px;
+          }
+          .email-card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            max-width: 580px;
+            margin: 0 auto;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+          }
+          .email-header {
+            background-color: #ffffff;
+            padding: 24px 30px;
+            text-align: center;
+            border-bottom: 3px solid #10b981;
+          }
+          .logo-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 2px;
+            vertical-align: middle;
+          }
+          .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+          .brand-text {
+            color: #0f172a;
+            font-size: 22px;
+            font-weight: 800;
+            margin-left: 10px;
+            vertical-align: middle;
+            display: inline-block;
+            letter-spacing: -0.5px;
+          }
+          .brand-accent {
+            color: #10b981;
+          }
+          .email-body {
+            padding: 35px 30px;
+            color: #334155;
+          }
+          h1 {
+            color: #0f172a;
+            font-size: 20px;
+            font-weight: 800;
+            margin-top: 0;
+            margin-bottom: 18px;
+          }
+          p {
+            font-size: 15px;
+            line-height: 1.6;
+            margin-top: 0;
+            margin-bottom: 18px;
+            color: #475569;
+          }
+          .otp-card {
+            background-color: #f8fafc;
+            border: 1px dashed #10b981;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 25px 0;
+            text-align: center;
+          }
+          .otp-code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: 8px;
+            color: #059669;
+            margin: 10px 0;
+          }
+          .otp-notice {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+          }
+          .email-footer {
+            background-color: #f8fafc;
+            padding: 24px;
+            text-align: center;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #64748b;
+          }
+          .support-contact {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-wrapper">
+          <div class="email-card">
+            
+            <!-- Header Section -->
+            <div class="email-header">
+              <div class="logo-container">
+                <img src="${logoUrl}" alt="Logo" class="logo-img">
+              </div>
+              <span class="brand-text">Marunnundo<span class="brand-accent">.in</span></span>
+            </div>
+
+            <!-- Body Section -->
+            <div class="email-body">
+              <h1>Reset Your Password, ${name}</h1>
+              <p>
+                We received a request to reset the password for your pharmacy account on <strong>Marunnundo.in</strong>. 
+                Please use the following 6-digit verification code to reset your credentials:
+              </p>
+
+              <!-- OTP Display Card -->
+              <div class="otp-card">
+                <div class="otp-code">${otp}</div>
+                <div class="otp-notice">This code is valid for 10 minutes and can only be used once.</div>
+              </div>
+
+              <p>
+                If you did not initiate this request, you can safely ignore this email. Your current password will remain unchanged and fully secure.
+              </p>
+            </div>
+
+            <!-- Footer Section -->
+            <div class="email-footer">
+              <p>&copy; ${new Date().getFullYear()} Marunnundo.in. All rights reserved.</p>
+              <div class="support-contact">
+                <strong>Need assistance?</strong> Reach our helpline at 
+                <span style="color: #10b981; font-weight: 700;">+91 79027 65146</span> 
+                or reply directly to this email at <a href="mailto:marunnundo.in@gmail.com" style="color: #10b981; text-decoration: none; font-weight: 600;">marunnundo.in@gmail.com</a>.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const mailOptions = {
+      from: `"Marunnundo Support" <${process.env.EMAIL_USER || 'marunnundo.in@gmail.com'}>`,
+      to: email,
+      subject: `Password Reset Verification Code - Marunnundo.in`,
+      text: textContent,
+      html: htmlContent,
+    };
+
+    if (!process.env.EMAIL_PASS) {
+      console.warn('EMAIL_PASS is not defined in environment variables. OTP email was not sent.');
+      return { success: false, error: 'EMAIL_PASS missing' };
+    }
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`OTP verification email successfully sent to ${email}. MessageId: ${info.messageId}`);
+    return { success: true, messageId: info.messageId };
+  } catch (error: any) {
+    console.error('Failed to send OTP verification email:', error);
+    return { success: false, error: error.message || 'Error occurred while sending mail' };
+  }
+}
