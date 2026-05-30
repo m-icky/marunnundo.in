@@ -107,7 +107,7 @@ export async function toggleSuspendPharmacy(pharmacyId: string, suspendState: bo
       data: {
         title: suspendState ? 'Pharmacy Suspended' : 'Pharmacy Reinstated',
         message: suspendState
-          ? `Your pharmacy "${pharmacy.name}" has been suspended by the administrator. Please contact support@marunnundo.in for clarifications.`
+          ? `Your pharmacy "${pharmacy.name}" has been suspended by the administrator. Please contact marunnundo.in@gmail.com for clarifications.`
           : `Your pharmacy "${pharmacy.name}" has been reinstated by the administrator and is visible on Marunnundo.in again.`,
         userId: pharmacy.ownerId,
       },
