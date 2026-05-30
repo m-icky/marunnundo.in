@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import confetti from 'canvas-confetti';
 import { registerOwner, resolveGoogleMapsUrl } from '@/app/actions/auth';
 import MapLoader from '@/components/MapLoader';
 import { useLanguage } from '@/context/LanguageContext';
@@ -24,7 +25,8 @@ import {
   ShieldCheck,
   Compass,
   ArrowLeft,
-  Check
+  Check,
+  Loader2
 } from 'lucide-react';
 
 export default function RegisterPage() {
@@ -173,7 +175,42 @@ export default function RegisterPage() {
 
       if (res.success) {
         setSuccess(true);
-        setTimeout(() => router.push('/login'), 2000);
+        
+        // Trigger a burst of beautiful confetti!
+        confetti({
+          particleCount: 150,
+          spread: 80,
+          origin: { y: 0.6 }
+        });
+        
+        // Follow up with some side bursts for extra premium feel!
+        const duration = 2.5 * 1000;
+        const end = Date.now() + duration;
+
+        const frame = () => {
+          confetti({
+            particleCount: 3,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#10b981', '#34d399', '#059669']
+          });
+          confetti({
+            particleCount: 3,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#10b981', '#34d399', '#059669']
+          });
+
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        };
+        frame();
+
+        // Redirect to /login after 3.5 seconds
+        setTimeout(() => router.push('/login'), 3500);
       } else {
         setError(res.error || 'Failed to register store');
       }
@@ -770,6 +807,44 @@ export default function RegisterPage() {
         </footer>
 
       </div>
+
+      {/* Full-screen Success Celebration & Redirect Loader Overlay */}
+      {success && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 transition-all duration-300">
+          <div className="bg-white border border-slate-100 rounded-3xl p-8 sm:p-10 max-w-md w-full shadow-2xl flex flex-col items-center text-center gap-6 relative overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-4 duration-300">
+            {/* Emerald Top Accent Line */}
+            <div className="absolute top-0 inset-x-0 h-2 bg-emerald-500"></div>
+            
+            {/* Animated Checkmark Circle */}
+            <div className="w-20 h-20 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-lg shadow-emerald-500/10 relative">
+              <Check className="w-10 h-10 stroke-[3px] animate-in zoom-in-75 duration-300 delay-100" />
+            </div>
+
+            {/* Content Details */}
+            <div className="flex flex-col gap-2">
+              <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+                {language === 'ml' ? 'രജിസ്ട്രേഷൻ വിജയകരം!' : 'Registration Successful!'}
+              </h2>
+              <p className="text-slate-500 text-sm font-semibold leading-relaxed">
+                {language === 'ml' 
+                  ? 'നിങ്ങളുടെ ഫാർമസി വിജയകരമായി രജിസ്റ്റർ ചെയ്തു. ഒരു വെൽക്കം ഇമെയിൽ നിങ്ങളുടെ ഇൻബോക്സിലേക്ക് അയച്ചിട്ടുണ്ട്.'
+                  : 'Your pharmacy has been successfully registered. A welcome email has been sent to your inbox!'
+                }
+              </p>
+            </div>
+
+            {/* Spinner Loader */}
+            <div className="flex flex-col items-center gap-3 mt-2 w-full">
+              <div className="flex items-center justify-center gap-2.5 bg-slate-50 border border-slate-100 rounded-2xl py-3.5 px-5 w-full">
+                <Loader2 className="w-4.5 h-4.5 text-emerald-600 animate-spin" />
+                <span className="text-xs font-bold text-slate-600">
+                  {language === 'ml' ? 'ഡാഷ്‌ബോർഡിലേക്ക് റീഡയറക്ട് ചെയ്യുന്നു...' : 'Preparing your secure dashboard...'}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

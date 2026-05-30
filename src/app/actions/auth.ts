@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db';
 import { signToken, verifyToken } from '@/lib/jwt';
 import { z } from 'zod';
+import { sendWelcomeEmail } from '@/lib/mail';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -182,23 +183,17 @@ export async function registerOwner(data: RegisterOwnerInput) {
       return { user, pharmacy };
     });
 
-    // Auto-login after registration
-    const token = await signToken({
-      id: result.user.id,
+    // Send welcome email asynchronously without blocking the registration response
+    sendWelcomeEmail({
       email: result.user.email,
       name: result.user.name,
-      role: result.user.role,
+      shopName: result.pharmacy.name,
+      licenseNumber: result.pharmacy.licenseNumber,
+    }).catch((err) => {
+      console.error('Failed to send welcome email in background:', err);
     });
 
-    const cookieStore = await cookies();
-    cookieStore.set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7,
-      path: '/',
-    });
-
+    // Return success response (Auto-login removed so user must log in manually)
     return { success: true, user: { name: result.user.name, email: result.user.email, role: result.user.role } };
   } catch (error: any) {
     console.error('Register owner action error:', error);
