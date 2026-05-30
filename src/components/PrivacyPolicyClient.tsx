@@ -95,7 +95,7 @@ export default function PrivacyPolicyClient() {
                 </li>
                 <li className="flex items-center gap-2">
                   <Phone className="w-4 h-4 text-emerald-400" />
-                  <span>+91 484 2345 678</span>
+                  <span>+91 79027 65146</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-emerald-400" />
